@@ -36,7 +36,9 @@ Touch anywhere and ripple rings bloom outward from your finger, slow and meditat
 
 **Breathing guide** -- a razor-thin dotted ring that expands on inhale, flashes softly on hold, contracts on exhale. Six presets: 4-7-8 (sleep), Box (grounding), Cardiac coherence (anxiety), Resonance (natural rhythm), Gentle (beginner), and fully Custom.
 
-**Palettes** -- six moods: moonlit, aurora, ocean, ember, sakura, forest. Eight ink colors per palette. Auto color cycling option. Six canvas backgrounds from deep midnight to warm parchment.
+**Palettes** -- six moods: moonlit, dusk, slate, amber, sakura, forest. Eight ink colors per palette. Auto color cycling option. Six canvas backgrounds from deep midnight to warm parchment.
+
+**Glow & brightness controls** -- glow intensity scales the soft halo around strokes from crisp to dreamy. Brightness cap clamps luminance across the whole canvas to prevent additive blending blowout at the mandala centre.
 
 **Sleep timer** -- tap the moon button and set 15, 30, or 60 minutes. Audio fades gradually to silence, then stops.
 
@@ -139,7 +141,7 @@ Sleepscape collects no user data. There are no analytics, no network requests, n
 
 ## Current status
 
-The native iOS app is fully functional. Sound design improvements are in progress with a collaborator (see `sound_design_brief.md`). The ambient bloom visual effect (firework-style particle dissipation) is being refined.
+The native iOS app is fully functional. Sound design improvements are in progress with a collaborator (see `SOUND_DESIGN_BRIEF.md`). The ambient bloom visual effect (firework-style particle dissipation) is being refined.
 
 The original HTML prototype is in `sleepscape.html` -- open it in any browser to try the experience without building anything.
 
@@ -147,21 +149,9 @@ The original HTML prototype is in `sleepscape.html` -- open it in any browser to
 
 ## Making changes with Claude Code
 
-If you want to modify the app, drop this into a Claude Code or Claude chat session:
+This repo includes a `CLAUDE.md` file that Claude Code reads automatically when you open the project. It contains the full architecture reference, rendering pipeline details, and conventions — no setup needed. Just clone, open with Claude Code, and describe what you want to change.
 
-> I'm working on Sleepscape, an open source meditative drawing and ambient sound app for iPad. The repo is at https://github.com/heelago/Sleepscape.
->
-> The app is built with SwiftUI + Metal (MTKView for GPU rendering) + AudioKit for generative audio synthesis. It targets iOS 18+, iPad only. The full technical spec is in SLEEPSCAPE_SPEC.md. The developer handoff is in HANDOFF.md.
->
-> Key architecture:
-> - Drawing engine: Metal shaders in Shaders.metal, MTKView wrapper in Drawing/MetalCanvasView.swift
-> - Audio engine: AudioKit node graph in Audio/AudioEngine.swift
-> - App state: AppState.swift (@Observable)
-> - UI: SwiftUI views in UI/, settings sheet in UI/SettingsSheet.swift
->
-> [Describe what you want to change here]
->
-> Please read the relevant source files before making changes, build after every modification, and fix any compiler errors before proceeding.
+If you're using regular Claude chat instead, point it at `CLAUDE.md` and the relevant source files for context.
 
 ---
 
@@ -177,10 +167,11 @@ sleepscape/
     Session/                    -- breath guide, session manager
     UI/                         -- TopBar, GripStrip, SettingsSheet, overlays
     Resources/Fonts/            -- Cormorant Garamond, Crimson Pro
+  CLAUDE.md                     -- architecture reference for Claude Code
   sleepscape.html               -- original HTML prototype
   SLEEPSCAPE_SPEC.md            -- full technical spec
   HANDOFF.md                    -- developer handoff document
-  sound_design_brief.md         -- audio collaboration brief
+  SOUND_DESIGN_BRIEF.md         -- audio collaboration brief
   PrivacyInfo.xcprivacy         -- App Store privacy manifest
 ```
 
