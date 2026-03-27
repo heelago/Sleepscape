@@ -1,0 +1,49 @@
+name: Sleepscape
+options:
+  bundleIdPrefix: com.h2eapps
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    TARGETED_DEVICE_FAMILY: "2"  # iPad only
+    INFOPLIST_FILE: Sleepscape/Info.plist
+    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
+
+packages:
+  AudioKit:
+    url: https://github.com/AudioKit/AudioKit
+    exactVersion: 5.6.1
+  SoundpipeAudioKit:
+    url: https://github.com/AudioKit/SoundpipeAudioKit
+    exactVersion: 5.6.1
+
+targets:
+  Sleepscape:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sleepscape
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.h2eapps.sleepscape
+        INFOPLIST_FILE: Sleepscape/Info.plist
+        DEVELOPMENT_TEAM: WDSXHYBMAW
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_REQUIRED: "YES"
+        CODE_SIGNING_ALLOWED: "YES"
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+        TARGETED_DEVICE_FAMILY: "2"
+        SWIFT_VERSION: "5.9"
+        METAL_LIBRARY_OUTPUT_DIR: "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)"
+    dependencies:
+      - package: AudioKit
+      - package: SoundpipeAudioKit
+    info:
+      path: Sleepscape/Info.plist

@@ -1,0 +1,568 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DE5F660A234B9E04A38E9CE7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA53040C6EB464F5206F9EBA /* PrivacyInfo.xcprivacy */; };
+		05A3C4F290EFFC849B9BF16A /* CrimsonPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 815764D8BA962174BF9FAFBA /* CrimsonPro-Light.ttf */; };
+		0658105E83067DF54C83BFA9 /* TopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD57D496C6E92F0C09B0A2F4 /* TopBar.swift */; };
+		09DDFD93703B6D26C425698A /* SleepOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B13D120607E5FF0208CE2 /* SleepOverlay.swift */; };
+		1AE50AE0D8B6812A4F3B9F2C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7322A217CB32560E9A7E761 /* BottomSheet.swift */; };
+		1D90B640A26BDE4246FB1749 /* AutoColorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860A728833B25DFE901EA6B /* AutoColorRow.swift */; };
+		20531AFD3EA768BC7A595DF1 /* BloomsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39DF32BBACD45E1C6AF7675 /* BloomsRow.swift */; };
+		26AFD27712D3765ACCA35D8D /* CormorantGaramond-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CA95850333C9FA3C6037862 /* CormorantGaramond-LightItalic.ttf */; };
+		302420817578E779A0D1B677 /* SymmetryTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0B3E38699BDFACDA94030B /* SymmetryTransform.swift */; };
+		326722DDD06C7F997750F7B9 /* SymmetryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3551188126C2586455E1C8EE /* SymmetryRow.swift */; };
+		33EEBCE0508AA4CD237467A3 /* BreathGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D936E7F53B9EDA083D4F2D1 /* BreathGuide.swift */; };
+		3A6A4AAF61594BEB0E25B320 /* LineStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727673879B6FF4084EA23E23 /* LineStyle.swift */; };
+		3ABD9EF710A9140A94197387 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B97C51668A552ED39453D3 /* AudioEngine.swift */; };
+		3F66B51573BE7FA28793A350 /* AudioPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC8B65EF9BF17E5471DB0C0 /* AudioPreset.swift */; };
+		40C44A45FE8ADC37D98E531A /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4B0AA149FC48997670FEC2B3 /* AudioKit */; };
+		464CBE6EE58B4CFBDB441680 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 43C9874070736FA80DE45C9C /* Shaders.metal */; };
+		574FEE00CE1E90ED84B54FF8 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C928CC728A1FAD0856E55FD /* SessionManager.swift */; };
+		5B8C02AAC459954B68EB3F16 /* ModeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085D85500BB941C01F55E26F /* ModeRow.swift */; };
+		5EA3182F46B1228D8AA797DA /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCED1A035638971D80FE394 /* Palette.swift */; };
+		6059E23E7BFE9E8A3AC62E36 /* DrawMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5145AE3A8EC821124E4CD929 /* DrawMode.swift */; };
+		690A2711CDDB43706F9BB1E2 /* CrimsonPro-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FCDC41FFD03174B4875044F7 /* CrimsonPro-ExtraLight.ttf */; };
+		6ACA00EAE06C4361487701D0 /* BrushRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105092F42BA6993BBF0C4BA1 /* BrushRow.swift */; };
+		6C183BFF8903B866461EFC6C /* LineStyleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE528BC858DBE18EDECF172 /* LineStyleRow.swift */; };
+		70E44D0E5C89C0F25B2CF5BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C84264B7F4978723BAED91 /* ContentView.swift */; };
+		7CC085ACF97438A0273559F2 /* DrawingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE10940A45C7F70FCDFC8F10 /* DrawingEngine.swift */; };
+		805AB13DA29FDACFB3E39DE4 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBBD41B09968761D67A6E45 /* SoundpipeAudioKit */; };
+		8083867BBB3CA24408BCF0C5 /* GripStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAE0CF15340EB1961371C25 /* GripStrip.swift */; };
+		9A22DDD7960E178CDC08314B /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CE12AD2B137E860AA23789 /* AppState.swift */; };
+		A219337135BE5E6440A41B78 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40867C8E70C4875B8F29F663 /* SettingsSheet.swift */; };
+		A297D41D7D7D4E95C13B1EE1 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DB00F2BA7ADF03BF92E3A2 /* Stroke.swift */; };
+		B2B07E43E765F5C704B7ABC8 /* PaletteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35F1FBF8388B3311CF02C8D /* PaletteRow.swift */; };
+		BBD3FEE1DFBC5BE39765ECC4 /* AudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00822B1B8262FF8AC98EF09F /* AudioViewModel.swift */; };
+		CB1F9BF35AC1515415AABE8F /* InkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6754B68AFF16EDF834DB808 /* InkRow.swift */; };
+		E7CB22A7DFBEB576590D8846 /* SleepscapeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D6E97FD8BE2BE4A1A7710A /* SleepscapeApp.swift */; };
+		F021B12B09C1048E644D9BC0 /* MetalCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAC66ECDE2607C36E6407F5 /* MetalCanvasView.swift */; };
+		FAFAF4D0D0149E615A20436B /* MetalCanvasViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85174D029BF4949C2CAF1E63 /* MetalCanvasViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA53040C6EB464F5206F9EBA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		00822B1B8262FF8AC98EF09F /* AudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewModel.swift; sourceTree = "<group>"; };
+		01DB00F2BA7ADF03BF92E3A2 /* Stroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
+		085D85500BB941C01F55E26F /* ModeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeRow.swift; sourceTree = "<group>"; };
+		105092F42BA6993BBF0C4BA1 /* BrushRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushRow.swift; sourceTree = "<group>"; };
+		1AAE0CF15340EB1961371C25 /* GripStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripStrip.swift; sourceTree = "<group>"; };
+		2D936E7F53B9EDA083D4F2D1 /* BreathGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathGuide.swift; sourceTree = "<group>"; };
+		3551188126C2586455E1C8EE /* SymmetryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetryRow.swift; sourceTree = "<group>"; };
+		37D6E97FD8BE2BE4A1A7710A /* SleepscapeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepscapeApp.swift; sourceTree = "<group>"; };
+		40867C8E70C4875B8F29F663 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
+		43C9874070736FA80DE45C9C /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		5145AE3A8EC821124E4CD929 /* DrawMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawMode.swift; sourceTree = "<group>"; };
+		5F0B3E38699BDFACDA94030B /* SymmetryTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetryTransform.swift; sourceTree = "<group>"; };
+		6BE528BC858DBE18EDECF172 /* LineStyleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStyleRow.swift; sourceTree = "<group>"; };
+		727673879B6FF4084EA23E23 /* LineStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStyle.swift; sourceTree = "<group>"; };
+		815764D8BA962174BF9FAFBA /* CrimsonPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CrimsonPro-Light.ttf"; sourceTree = "<group>"; };
+		85174D029BF4949C2CAF1E63 /* MetalCanvasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalCanvasViewModel.swift; sourceTree = "<group>"; };
+		88CE12AD2B137E860AA23789 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		8C928CC728A1FAD0856E55FD /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		9CA95850333C9FA3C6037862 /* CormorantGaramond-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CormorantGaramond-LightItalic.ttf"; sourceTree = "<group>"; };
+		A35F1FBF8388B3311CF02C8D /* PaletteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteRow.swift; sourceTree = "<group>"; };
+		ACAC66ECDE2607C36E6407F5 /* MetalCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalCanvasView.swift; sourceTree = "<group>"; };
+		AE10940A45C7F70FCDFC8F10 /* DrawingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingEngine.swift; sourceTree = "<group>"; };
+		B20EE2E9ADD63B5CB357BBCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B288D946543DB1801D03DBAE /* Sleepscape.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sleepscape.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B97C51668A552ED39453D3 /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		BCC8B65EF9BF17E5471DB0C0 /* AudioPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPreset.swift; sourceTree = "<group>"; };
+		BFCED1A035638971D80FE394 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		C7322A217CB32560E9A7E761 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
+		CD57D496C6E92F0C09B0A2F4 /* TopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBar.swift; sourceTree = "<group>"; };
+		D39DF32BBACD45E1C6AF7675 /* BloomsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloomsRow.swift; sourceTree = "<group>"; };
+		D3C84264B7F4978723BAED91 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D6754B68AFF16EDF834DB808 /* InkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InkRow.swift; sourceTree = "<group>"; };
+		E56B13D120607E5FF0208CE2 /* SleepOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepOverlay.swift; sourceTree = "<group>"; };
+		F860A728833B25DFE901EA6B /* AutoColorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoColorRow.swift; sourceTree = "<group>"; };
+		FCDC41FFD03174B4875044F7 /* CrimsonPro-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CrimsonPro-ExtraLight.ttf"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B3B68C7D54FCE1E741957622 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40C44A45FE8ADC37D98E531A /* AudioKit in Frameworks */,
+				805AB13DA29FDACFB3E39DE4 /* SoundpipeAudioKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		019399C3DAB009FD51872D88 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B288D946543DB1801D03DBAE /* Sleepscape.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		15DAF720CAF81C357B07A67B = {
+			isa = PBXGroup;
+			children = (
+				65D926F4344584312444C028 /* Sleepscape */,
+				019399C3DAB009FD51872D88 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1C3EAA4D9A4A8B0CBA004C8D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F860A728833B25DFE901EA6B /* AutoColorRow.swift */,
+				D39DF32BBACD45E1C6AF7675 /* BloomsRow.swift */,
+				C7322A217CB32560E9A7E761 /* BottomSheet.swift */,
+				105092F42BA6993BBF0C4BA1 /* BrushRow.swift */,
+				1AAE0CF15340EB1961371C25 /* GripStrip.swift */,
+				D6754B68AFF16EDF834DB808 /* InkRow.swift */,
+				6BE528BC858DBE18EDECF172 /* LineStyleRow.swift */,
+				085D85500BB941C01F55E26F /* ModeRow.swift */,
+				A35F1FBF8388B3311CF02C8D /* PaletteRow.swift */,
+				40867C8E70C4875B8F29F663 /* SettingsSheet.swift */,
+				E56B13D120607E5FF0208CE2 /* SleepOverlay.swift */,
+				3551188126C2586455E1C8EE /* SymmetryRow.swift */,
+				CD57D496C6E92F0C09B0A2F4 /* TopBar.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		1CA2B337668896A0AF25FD2F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				65AE3927BDD776C879CA7D93 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		229B78A30723616DAC3213EE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				88CE12AD2B137E860AA23789 /* AppState.swift */,
+				BCC8B65EF9BF17E5471DB0C0 /* AudioPreset.swift */,
+				5145AE3A8EC821124E4CD929 /* DrawMode.swift */,
+				727673879B6FF4084EA23E23 /* LineStyle.swift */,
+				BFCED1A035638971D80FE394 /* Palette.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		25238028085DE218CD129BA3 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				AE10940A45C7F70FCDFC8F10 /* DrawingEngine.swift */,
+				ACAC66ECDE2607C36E6407F5 /* MetalCanvasView.swift */,
+				85174D029BF4949C2CAF1E63 /* MetalCanvasViewModel.swift */,
+				43C9874070736FA80DE45C9C /* Shaders.metal */,
+				01DB00F2BA7ADF03BF92E3A2 /* Stroke.swift */,
+				5F0B3E38699BDFACDA94030B /* SymmetryTransform.swift */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		65AE3927BDD776C879CA7D93 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				9CA95850333C9FA3C6037862 /* CormorantGaramond-LightItalic.ttf */,
+				FCDC41FFD03174B4875044F7 /* CrimsonPro-ExtraLight.ttf */,
+				815764D8BA962174BF9FAFBA /* CrimsonPro-Light.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		65D926F4344584312444C028 /* Sleepscape */ = {
+			isa = PBXGroup;
+			children = (
+				B20EE2E9ADD63B5CB357BBCD /* Info.plist */,
+				AA53040C6EB464F5206F9EBA /* PrivacyInfo.xcprivacy */,
+				A70F65F9C30CCD012CCEBEBC /* App */,
+				AE0511B5E37DA7D54AC09B7A /* Audio */,
+				25238028085DE218CD129BA3 /* Drawing */,
+				229B78A30723616DAC3213EE /* Models */,
+				1CA2B337668896A0AF25FD2F /* Resources */,
+				D0F756C0D6987FB1DFB96AAB /* Session */,
+				1C3EAA4D9A4A8B0CBA004C8D /* UI */,
+			);
+			path = Sleepscape;
+			sourceTree = "<group>";
+		};
+		A70F65F9C30CCD012CCEBEBC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D3C84264B7F4978723BAED91 /* ContentView.swift */,
+				37D6E97FD8BE2BE4A1A7710A /* SleepscapeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AE0511B5E37DA7D54AC09B7A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				B8B97C51668A552ED39453D3 /* AudioEngine.swift */,
+				00822B1B8262FF8AC98EF09F /* AudioViewModel.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		D0F756C0D6987FB1DFB96AAB /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				2D936E7F53B9EDA083D4F2D1 /* BreathGuide.swift */,
+				8C928CC728A1FAD0856E55FD /* SessionManager.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A787920A668D294990C582D1 /* Sleepscape */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B7CE19F7CB42D87EBB61533 /* Build configuration list for PBXNativeTarget "Sleepscape" */;
+			buildPhases = (
+				F77567C7DF4311971B1791E9 /* Sources */,
+				36BA156253008CD0E82864D3 /* Resources */,
+				B3B68C7D54FCE1E741957622 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sleepscape;
+			packageProductDependencies = (
+				4B0AA149FC48997670FEC2B3 /* AudioKit */,
+				4BBBD41B09968761D67A6E45 /* SoundpipeAudioKit */,
+			);
+			productName = Sleepscape;
+			productReference = B288D946543DB1801D03DBAE /* Sleepscape.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		839FABDDA181662F59C1EC54 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A787920A668D294990C582D1 = {
+						DevelopmentTeam = WDSXHYBMAW;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 53E66F801C41E3397FCDD0C8 /* Build configuration list for PBXProject "Sleepscape" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 15DAF720CAF81C357B07A67B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BE304CBAE9013AB1A64215C1 /* XCRemoteSwiftPackageReference "AudioKit" */,
+				261FCC7F9ED90390E5B2EFE0 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 019399C3DAB009FD51872D88 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A787920A668D294990C582D1 /* Sleepscape */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		36BA156253008CD0E82864D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE5F660A234B9E04A38E9CE7 /* PrivacyInfo.xcprivacy in Resources */,
+				26AFD27712D3765ACCA35D8D /* CormorantGaramond-LightItalic.ttf in Resources */,
+				690A2711CDDB43706F9BB1E2 /* CrimsonPro-ExtraLight.ttf in Resources */,
+				05A3C4F290EFFC849B9BF16A /* CrimsonPro-Light.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F77567C7DF4311971B1791E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A22DDD7960E178CDC08314B /* AppState.swift in Sources */,
+				3ABD9EF710A9140A94197387 /* AudioEngine.swift in Sources */,
+				3F66B51573BE7FA28793A350 /* AudioPreset.swift in Sources */,
+				BBD3FEE1DFBC5BE39765ECC4 /* AudioViewModel.swift in Sources */,
+				1D90B640A26BDE4246FB1749 /* AutoColorRow.swift in Sources */,
+				20531AFD3EA768BC7A595DF1 /* BloomsRow.swift in Sources */,
+				1AE50AE0D8B6812A4F3B9F2C /* BottomSheet.swift in Sources */,
+				33EEBCE0508AA4CD237467A3 /* BreathGuide.swift in Sources */,
+				6ACA00EAE06C4361487701D0 /* BrushRow.swift in Sources */,
+				70E44D0E5C89C0F25B2CF5BA /* ContentView.swift in Sources */,
+				6059E23E7BFE9E8A3AC62E36 /* DrawMode.swift in Sources */,
+				7CC085ACF97438A0273559F2 /* DrawingEngine.swift in Sources */,
+				8083867BBB3CA24408BCF0C5 /* GripStrip.swift in Sources */,
+				CB1F9BF35AC1515415AABE8F /* InkRow.swift in Sources */,
+				3A6A4AAF61594BEB0E25B320 /* LineStyle.swift in Sources */,
+				6C183BFF8903B866461EFC6C /* LineStyleRow.swift in Sources */,
+				F021B12B09C1048E644D9BC0 /* MetalCanvasView.swift in Sources */,
+				FAFAF4D0D0149E615A20436B /* MetalCanvasViewModel.swift in Sources */,
+				5B8C02AAC459954B68EB3F16 /* ModeRow.swift in Sources */,
+				5EA3182F46B1228D8AA797DA /* Palette.swift in Sources */,
+				B2B07E43E765F5C704B7ABC8 /* PaletteRow.swift in Sources */,
+				574FEE00CE1E90ED84B54FF8 /* SessionManager.swift in Sources */,
+				A219337135BE5E6440A41B78 /* SettingsSheet.swift in Sources */,
+				464CBE6EE58B4CFBDB441680 /* Shaders.metal in Sources */,
+				09DDFD93703B6D26C425698A /* SleepOverlay.swift in Sources */,
+				E7CB22A7DFBEB576590D8846 /* SleepscapeApp.swift in Sources */,
+				A297D41D7D7D4E95C13B1EE1 /* Stroke.swift in Sources */,
+				326722DDD06C7F997750F7B9 /* SymmetryRow.swift in Sources */,
+				302420817578E779A0D1B677 /* SymmetryTransform.swift in Sources */,
+				0658105E83067DF54C83BFA9 /* TopBar.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B21E6E6CF1646694B17F48E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGNING_REQUIRED = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDSXHYBMAW;
+				INFOPLIST_FILE = Sleepscape/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				METAL_LIBRARY_OUTPUT_DIR = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.h2eapps.sleepscape;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		B3A1B3F416603355F60E1968 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGNING_REQUIRED = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDSXHYBMAW;
+				INFOPLIST_FILE = Sleepscape/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				METAL_LIBRARY_OUTPUT_DIR = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.h2eapps.sleepscape;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		BF1ECCE4F4A5715623BADD36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Sleepscape/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		E4F2D00619A8931EF6BD02CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Sleepscape/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4B7CE19F7CB42D87EBB61533 /* Build configuration list for PBXNativeTarget "Sleepscape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B21E6E6CF1646694B17F48E1 /* Debug */,
+				B3A1B3F416603355F60E1968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		53E66F801C41E3397FCDD0C8 /* Build configuration list for PBXProject "Sleepscape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4F2D00619A8931EF6BD02CD /* Debug */,
+				BF1ECCE4F4A5715623BADD36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		261FCC7F9ED90390E5B2EFE0 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/SoundpipeAudioKit";
+			requirement = {
+				kind = exactVersion;
+				version = 5.6.1;
+			};
+		};
+		BE304CBAE9013AB1A64215C1 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit";
+			requirement = {
+				kind = exactVersion;
+				version = 5.6.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B0AA149FC48997670FEC2B3 /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE304CBAE9013AB1A64215C1 /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+		4BBBD41B09968761D67A6E45 /* SoundpipeAudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 261FCC7F9ED90390E5B2EFE0 /* XCRemoteSwiftPackageReference "SoundpipeAudioKit" */;
+			productName = SoundpipeAudioKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 839FABDDA181662F59C1EC54 /* Project object */;
+}
