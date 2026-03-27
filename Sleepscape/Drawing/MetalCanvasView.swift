@@ -202,10 +202,16 @@ struct MetalCanvasView: UIViewRepresentable {
         let coord = context.coordinator
         let oldPalette = coord.appState.currentPalette.id
         let oldBg = coord.appState.canvasBackground
+        let oldGlow = coord.appState.glowIntensity
         coord.appState = appState
 
         if oldPalette != appState.currentPalette.id || oldBg != appState.canvasBackground {
             coord.startBackgroundTransition()
+        }
+
+        // Re-render strokes when glow intensity changes (affects cached stroke texture)
+        if oldGlow != appState.glowIntensity {
+            coord.requestStrokeReRender()
         }
 
         // Sync bloom settings
@@ -250,6 +256,7 @@ struct MetalCanvasView: UIViewRepresentable {
         private var mandalaBorderPipelineState: MTLRenderPipelineState!
         private var breathPulsePipelineState: MTLRenderPipelineState!
         private var vignettePipelineState: MTLRenderPipelineState!
+        private var brightnessCapPipelineState: MTLRenderPipelineState!
 
         // Drawing state for breath pulse
         private var isDrawing: Bool = false
@@ -441,6 +448,15 @@ struct MetalCanvasView: UIViewRepresentable {
                 alphaBlendAttachment(desc)
                 vignettePipelineState = try device.makeRenderPipelineState(descriptor: desc)
             } catch { print("Vignette pipeline error: \(error)") }
+
+            // Brightness cap pipeline (no blend — replaces pixel, uses [[color(0)]])
+            do {
+                let desc = MTLRenderPipelineDescriptor()
+                desc.vertexFunction = library.makeFunction(name: "quadVertexShader")
+                desc.fragmentFunction = library.makeFunction(name: "brightnessCapFragment")
+                desc.colorAttachments[0].pixelFormat = .bgra8Unorm
+                brightnessCapPipelineState = try device.makeRenderPipelineState(descriptor: desc)
+            } catch { print("Brightness cap pipeline error: \(error)") }
         }
 
         // MARK: - Undo/Redo state sync
@@ -458,6 +474,10 @@ struct MetalCanvasView: UIViewRepresentable {
             bgTransitionOldColor = currentBGClearColor()
             bgTransitionProgress = 0
             // Flag for re-render in next draw loop (safer than calling from updateUIView)
+            needsBackgroundReRender = true
+        }
+
+        func requestStrokeReRender() {
             needsBackgroundReRender = true
         }
 
@@ -690,7 +710,16 @@ struct MetalCanvasView: UIViewRepresentable {
                 encoder.setFragmentTexture(rippleTex, index: 0)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
 
-                // 9) Radial vignette (darkens edges — very last)
+                // 9) Brightness cap — clamp luminance post-bloom (uses [[color(0)]])
+                let cap = appState.brightnessCap
+                if cap < 1.0, let capPipeline = brightnessCapPipelineState {
+                    encoder.setRenderPipelineState(capPipeline)
+                    var capVal = cap
+                    encoder.setFragmentBytes(&capVal, length: MemoryLayout<Float>.stride, index: 0)
+                    encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+                }
+
+                // 10) Radial vignette (darkens edges — very last)
                 renderVignette(encoder: encoder, canvasSize: drawableSize)
 
                 encoder.endEncoding()
@@ -724,11 +753,13 @@ struct MetalCanvasView: UIViewRepresentable {
             let size = SIMD2<Float>(Float(canvasSize.width), Float(canvasSize.height))
             let txCount = transforms.count
 
+            let glow = appState.glowIntensity
+
             if hasNewCompleted {
                 for i in renderedStrokeCount..<completedStrokes.count {
                     renderStroke3Pass(completedStrokes[i], encoder: encoder,
                                     canvasSize: size, transformBuffer: txBuf,
-                                    transformCount: txCount)
+                                    transformCount: txCount, glowIntensity: glow)
                 }
                 renderedStrokeCount = completedStrokes.count
             }
@@ -736,16 +767,17 @@ struct MetalCanvasView: UIViewRepresentable {
             if let stroke = currentStroke, !stroke.points.isEmpty {
                 renderStroke3Pass(stroke, encoder: encoder,
                                 canvasSize: size, transformBuffer: txBuf,
-                                transformCount: txCount)
+                                transformCount: txCount, glowIntensity: glow)
             }
 
             encoder.endEncoding()
         }
 
         /// 3-layer glow with line style support
+        /// glowIntensity scales the halo (pass 0) and mid-glow (pass 1) alphas; core (pass 2) is unchanged.
         private func renderStroke3Pass(_ stroke: Stroke, encoder: MTLRenderCommandEncoder,
                                         canvasSize: SIMD2<Float>, transformBuffer: MTLBuffer,
-                                        transformCount: Int) {
+                                        transformCount: Int, glowIntensity: Float = 1.0) {
             let points = stroke.points
             guard !points.isEmpty else { return }
 
@@ -779,14 +811,16 @@ struct MetalCanvasView: UIViewRepresentable {
                 passes = [(2.0, 0.02), (1.0, 0.10), (0.5, 0.80)]  // less glow, more core
             }
 
-            for pass in passes {
+            for (passIndex, pass) in passes.enumerated() {
                 let effectiveBrushSize = stroke.brushSize * pass.widthMul
+                // Scale halo (pass 0) and mid-glow (pass 1) by glowIntensity; core (pass 2) untouched
+                let effectiveAlpha = passIndex < 2 ? pass.alpha * glowIntensity : pass.alpha
 
                 var uniforms = GPUStrokeUniforms(
                     canvasSize: canvasSize,
                     color: color,
                     brushSize: effectiveBrushSize,
-                    alpha: pass.alpha,
+                    alpha: effectiveAlpha,
                     glowRadius: 0,
                     lineStyle: style
                 )
@@ -848,10 +882,11 @@ struct MetalCanvasView: UIViewRepresentable {
             guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: desc) else { return }
             let size = SIMD2<Float>(Float(canvasSize.width), Float(canvasSize.height))
 
+            let glow = appState.glowIntensity
             for stroke in drawingEngine.strokes {
                 renderStroke3Pass(stroke, encoder: encoder,
                                 canvasSize: size, transformBuffer: txBuf,
-                                transformCount: transforms.count)
+                                transformCount: transforms.count, glowIntensity: glow)
             }
 
             encoder.endEncoding()

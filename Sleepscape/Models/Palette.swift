@@ -17,30 +17,30 @@ struct Palette: Identifiable {
             ]
         ),
         Palette(
-            id: "aurora", name: "aurora",
-            background: Color(hex: "#040210"),
+            id: "dusk", name: "dusk",
+            background: Color(hex: "#06040e"),
             inks: [
-                Color(hex: "#7fffd4"), Color(hex: "#40e0d0"), Color(hex: "#9370db"),
-                Color(hex: "#da70d6"), Color(hex: "#87ceeb"), Color(hex: "#b0e0e6"),
-                Color(hex: "#dda0dd"), Color(hex: "#ffffff"),
+                Color(hex: "#b8d4c8"), Color(hex: "#8fb8a8"), Color(hex: "#a8c8b8"),
+                Color(hex: "#c8b8d8"), Color(hex: "#b8a8c8"), Color(hex: "#d8c8e0"),
+                Color(hex: "#c0d0c8"), Color(hex: "#ffffff"),
             ]
         ),
         Palette(
-            id: "ocean", name: "ocean",
-            background: Color(hex: "#010810"),
+            id: "slate", name: "slate",
+            background: Color(hex: "#050810"),
             inks: [
-                Color(hex: "#caf0f8"), Color(hex: "#90e0ef"), Color(hex: "#48cae4"),
-                Color(hex: "#ade8f4"), Color(hex: "#0096c7"), Color(hex: "#e0fbfc"),
-                Color(hex: "#98c1d9"), Color(hex: "#ffffff"),
+                Color(hex: "#b8c8d8"), Color(hex: "#98a8c0"), Color(hex: "#a8b8c8"),
+                Color(hex: "#d8c8b8"), Color(hex: "#c8b8a8"), Color(hex: "#c0c8d0"),
+                Color(hex: "#d8d0c8"), Color(hex: "#ffffff"),
             ]
         ),
         Palette(
-            id: "ember", name: "ember",
-            background: Color(hex: "#0a0300"),
+            id: "amber", name: "amber",
+            background: Color(hex: "#080400"),
             inks: [
-                Color(hex: "#ffcba4"), Color(hex: "#ff9f6b"), Color(hex: "#ffb347"),
-                Color(hex: "#ffd93d"), Color(hex: "#ff6b9d"), Color(hex: "#f72585"),
-                Color(hex: "#ff4757"), Color(hex: "#ffffff"),
+                Color(hex: "#d4b896"), Color(hex: "#c8a888"), Color(hex: "#e8d4b8"),
+                Color(hex: "#d8c0a0"), Color(hex: "#e0c898"), Color(hex: "#c8b890"),
+                Color(hex: "#f0dcc0"), Color(hex: "#ffffff"),
             ]
         ),
         Palette(

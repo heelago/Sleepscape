@@ -86,6 +86,22 @@ class AppState {
     var bloomSpawnRate: Float = 0.5
     var bloomIntensity: Float = 0.6
 
+    // Glow & brightness (persisted via UserDefaults)
+    var glowIntensity: Float {
+        get {
+            let v = UserDefaults.standard.object(forKey: "glowIntensity") as? Float
+            return v ?? 0.65
+        }
+        set { UserDefaults.standard.set(newValue, forKey: "glowIntensity") }
+    }
+    var brightnessCap: Float {
+        get {
+            let v = UserDefaults.standard.object(forKey: "brightnessCap") as? Float
+            return v ?? 0.70
+        }
+        set { UserDefaults.standard.set(newValue, forKey: "brightnessCap") }
+    }
+
     // Breath pulse + breathing pattern
     var breathPulseEnabled: Bool = false
     var breathingPreset: BreathingPreset = .resonance

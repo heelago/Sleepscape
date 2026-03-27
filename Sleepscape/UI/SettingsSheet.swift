@@ -198,7 +198,7 @@ struct SettingsSheet: View {
                     HStack(spacing: 6) {
                         Text("free")
                             .font(.custom("CrimsonPro-ExtraLight", size: 10))
-                            .foregroundStyle(.white.opacity(0.3))
+                            .foregroundStyle(.white.opacity(0.55))
                         Slider(
                             value: Binding(
                                 get: { Double(appState.paceThrottle) },
@@ -212,7 +212,7 @@ struct SettingsSheet: View {
                         .tint(.white.opacity(0.3))
                         Text("slow")
                             .font(.custom("CrimsonPro-ExtraLight", size: 10))
-                            .foregroundStyle(.white.opacity(0.3))
+                            .foregroundStyle(.white.opacity(0.55))
                     }
                 }
             }
@@ -284,6 +284,60 @@ struct SettingsSheet: View {
                     .labelsHidden()
                     .tint(.white.opacity(0.3))
                     .scaleEffect(0.75)
+                }
+
+                // Divider
+                Rectangle()
+                    .fill(.white.opacity(0.10))
+                    .frame(height: 0.5)
+                    .padding(.vertical, 2)
+
+                // Glow intensity
+                VStack(alignment: .leading, spacing: 4) {
+                    sectionLabel("glow intensity")
+                    HStack(spacing: 6) {
+                        Text("crisp")
+                            .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                            .foregroundStyle(.white.opacity(0.55))
+                        Slider(
+                            value: Binding(
+                                get: { Double(appState.glowIntensity) },
+                                set: {
+                                    appState.glowIntensity = Float($0)
+                                    resetAutoClose()
+                                }
+                            ),
+                            in: 0...1
+                        )
+                        .tint(.white.opacity(0.3))
+                        Text("dreamy")
+                            .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                            .foregroundStyle(.white.opacity(0.55))
+                    }
+                }
+
+                // Brightness cap
+                VStack(alignment: .leading, spacing: 4) {
+                    sectionLabel("brightness cap")
+                    HStack(spacing: 6) {
+                        Text("soft")
+                            .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                            .foregroundStyle(.white.opacity(0.55))
+                        Slider(
+                            value: Binding(
+                                get: { Double(appState.brightnessCap) },
+                                set: {
+                                    appState.brightnessCap = Float($0)
+                                    resetAutoClose()
+                                }
+                            ),
+                            in: 0...1
+                        )
+                        .tint(.white.opacity(0.3))
+                        Text("full")
+                            .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                            .foregroundStyle(.white.opacity(0.55))
+                    }
                 }
 
             }
@@ -380,16 +434,16 @@ struct SettingsSheet: View {
         HStack(spacing: 6) {
             Text(phase)
                 .font(.custom("CrimsonPro-Light", size: 12))
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(.white.opacity(0.55))
                 .frame(width: 44, alignment: .leading)
             Text("\(Int(seconds))s")
                 .font(.custom("CrimsonPro-Light", size: 12))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.white.opacity(0.55))
                 .monospacedDigit()
                 .frame(width: 22)
             Text("· \(note)")
                 .font(.custom("CrimsonPro-ExtraLight", size: 11))
-                .foregroundStyle(.white.opacity(0.3))
+                .foregroundStyle(.white.opacity(0.55))
         }
     }
 
@@ -397,7 +451,7 @@ struct SettingsSheet: View {
         HStack(spacing: 8) {
             Text(label)
                 .font(.custom("CrimsonPro-ExtraLight", size: 11))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.white.opacity(0.55))
                 .frame(width: 40, alignment: .leading)
             Slider(
                 value: Binding(
@@ -413,7 +467,7 @@ struct SettingsSheet: View {
             .tint(.white.opacity(0.3))
             Text("\(Int(value.wrappedValue))s")
                 .font(.custom("CrimsonPro-Light", size: 11))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.white.opacity(0.55))
                 .monospacedDigit()
                 .frame(width: 22, alignment: .trailing)
         }
@@ -435,20 +489,21 @@ struct SettingsSheet: View {
                             Text(preset.name)
                                 .font(.custom("CrimsonPro-Light", size: 14))
                                 .foregroundStyle(.white.opacity(
-                                    appState.currentPreset.id == preset.id ? 0.9 : 0.45))
+                                    appState.currentPreset.id == preset.id ? 0.95 : 0.60))
                             Spacer()
                             Text(preset.description)
                                 .font(.custom("CrimsonPro-ExtraLight", size: 11))
-                                .foregroundStyle(.white.opacity(0.35))
+                                .foregroundStyle(.white.opacity(0.55))
                         }
                         .padding(.horizontal, 12)
                         .padding(.vertical, 9)
                         .background(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(.white.opacity(
-                                    appState.currentPreset.id == preset.id ? 0.08 : 0.02))
+                                .fill(appState.currentPreset.id == preset.id
+                                      ? Color(red: 196/255, green: 184/255, blue: 232/255).opacity(0.16)
+                                      : .white.opacity(0.03))
                                 .strokeBorder(.white.opacity(
-                                    appState.currentPreset.id == preset.id ? 0.15 : 0.05),
+                                    appState.currentPreset.id == preset.id ? 0.50 : 0.35),
                                               lineWidth: 0.5)
                         )
                     }
@@ -464,7 +519,7 @@ struct SettingsSheet: View {
             Text(title)
                 .font(.custom("CrimsonPro-Light", size: 11))
                 .tracking(2)
-                .foregroundStyle(.white.opacity(0.35))
+                .foregroundStyle(.white.opacity(0.55))
 
             content()
         }
@@ -481,13 +536,15 @@ struct SettingsSheet: View {
         Button(action: action) {
             Text(text)
                 .font(.custom("CrimsonPro-Light", size: 12))
-                .foregroundStyle(.white.opacity(isSelected ? 0.9 : 0.4))
+                .foregroundStyle(.white.opacity(isSelected ? 0.95 : 0.60))
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(.white.opacity(isSelected ? 0.10 : 0.03))
-                        .strokeBorder(.white.opacity(isSelected ? 0.18 : 0), lineWidth: 0.5)
+                        .fill(isSelected
+                              ? Color(red: 196/255, green: 184/255, blue: 232/255).opacity(0.16)
+                              : .white.opacity(0.03))
+                        .strokeBorder(.white.opacity(isSelected ? 0.50 : 0.35), lineWidth: 0.5)
                 )
         }
     }
@@ -495,7 +552,7 @@ struct SettingsSheet: View {
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
             .font(.custom("CrimsonPro-ExtraLight", size: 12))
-            .foregroundStyle(.white.opacity(0.45))
+            .foregroundStyle(.white.opacity(0.55))
     }
 
     private func shortName(_ style: LineStyle) -> String {

@@ -749,6 +749,34 @@ fragment float4 breathPulseFragment(QuadVertex in [[stage_in]],
 }
 
 // ═══════════════════════════════════════════
+//  Brightness cap — luminance clamp post-process
+//  Uses [[color(0)]] programmable blending to read
+//  the current framebuffer in-place.
+// ═══════════════════════════════════════════
+
+fragment float4 brightnessCapFragment(QuadVertex in [[stage_in]],
+                                       float4 dest [[color(0)]],
+                                       constant float &cap [[buffer(0)]]) {
+    float3 rgb = dest.rgb;
+
+    // RGB → HSL (find luminance via max/min)
+    float cMax = max(rgb.r, max(rgb.g, rgb.b));
+    float cMin = min(rgb.r, min(rgb.g, rgb.b));
+    float L = (cMax + cMin) * 0.5;
+
+    float maxL = cap;  // cap * 1.0
+    if (L <= maxL || cMax < 0.001) {
+        return dest;   // already under cap or black
+    }
+
+    // Clamp luminance: scale RGB so new luminance = maxL
+    // For simplicity: scale = maxL / L, applied to RGB
+    float scale = maxL / max(L, 0.001);
+    float3 clamped = rgb * scale;
+    return float4(clamped, dest.a);
+}
+
+// ═══════════════════════════════════════════
 //  Radial vignette (darker edges)
 // ═══════════════════════════════════════════
 
