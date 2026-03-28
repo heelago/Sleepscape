@@ -63,7 +63,7 @@ export class SettingsSheet {
     // Mode pills
     card.appendChild(this.label('mode'));
     const modeRow = this.pillRow();
-    for (const mode of [DrawMode.Free, DrawMode.Mandala, DrawMode.Ellipse]) {
+    for (const mode of [DrawMode.Free, DrawMode.Mandala]) {
       modeRow.appendChild(this.pill(mode, this.state.drawMode === mode, () => {
         this.state.drawMode = mode;
         this.changed();
