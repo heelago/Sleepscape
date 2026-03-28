@@ -439,19 +439,20 @@
     }
     .breath-guide-circle {
       fill: none;
-      stroke: rgba(255,255,255,0.08);
-      stroke-width: 1;
+      stroke: rgba(255,255,255,0.35);
+      stroke-width: 1.2;
       animation: breatheCircle 8s ease-in-out infinite;
     }
     @keyframes breatheCircle {
-      0%, 100% { r: 30; opacity: 0.4; }
-      50% { r: 42; opacity: 0.8; }
+      0%, 100% { r: 30; opacity: 0.5; }
+      50% { r: 42; opacity: 0.9; }
     }
     .breath-guide-text {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic; font-weight: 300;
-      font-size: 14px; color: rgba(255,255,255,0.18);
+      font-size: 14px; color: rgba(255,255,255,0.4);
       letter-spacing: 3px;
+      transition: opacity 0.3s ease;
     }
     /* ── Starfield ── */
     .starfield {

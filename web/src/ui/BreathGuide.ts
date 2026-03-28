@@ -1,11 +1,17 @@
 /**
- * SVG breath guide overlay. Shows a pulsing circle with "breathe" text.
- * Always visible while enabled. Hides after 20 minutes of total inactivity.
+ * SVG breath guide overlay. Shows a pulsing circle with phase text
+ * (inhale/hold/exhale) or static "breathe". Always visible while enabled.
+ * Hides after 20 minutes of total inactivity.
  */
 export class BreathGuide {
   private el: HTMLElement;
+  private textEl: HTMLElement;
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
   private enabled = true;
+  private showPhaseText = true;
+  private phaseInterval: ReturnType<typeof setInterval> | null = null;
+  private phases = { inhale: 6, hold: 0, exhale: 6, hold2: 0 };
+  private cycleStart = 0;
   private static IDLE_TIMEOUT = 20 * 60 * 1000; // 20 minutes
 
   constructor() {
@@ -17,14 +23,15 @@ export class BreathGuide {
       </svg>
       <span class="breath-guide-text">breathe</span>
     `;
+    this.textEl = this.el.querySelector('.breath-guide-text')!;
     document.body.appendChild(this.el);
+    this.cycleStart = performance.now() / 1000;
+    this.startPhaseUpdater();
   }
 
   /** Reset idle timer. Call on any user interaction. */
   resetIdle(): void {
-    // Show if not already visible
     if (this.enabled) this.show();
-    // Reset the long idle timeout
     if (this.idleTimer) clearTimeout(this.idleTimer);
     if (this.enabled) {
       this.idleTimer = setTimeout(() => this.hide(), BreathGuide.IDLE_TIMEOUT);
@@ -35,16 +42,26 @@ export class BreathGuide {
     this.el.classList.add('visible');
   }
 
-  setOpacity(v: number): void {
-    // Scale the SVG circle stroke and text opacity with prominence
-    const circle = this.el.querySelector('.breath-guide-circle') as SVGElement | null;
-    const text = this.el.querySelector('.breath-guide-text') as HTMLElement | null;
-    if (circle) circle.style.strokeOpacity = `${0.08 + v * 0.35}`;
-    if (text) text.style.opacity = `${0.18 + v * 0.5}`;
-  }
-
   hide(): void {
     this.el.classList.remove('visible');
+  }
+
+  setOpacity(v: number): void {
+    const circle = this.el.querySelector('.breath-guide-circle') as SVGElement | null;
+    // Higher base opacity, scaled more aggressively
+    if (circle) circle.style.strokeOpacity = `${0.15 + v * 0.55}`;
+    if (this.textEl) this.textEl.style.opacity = `${0.3 + v * 0.5}`;
+  }
+
+  setPhases(phases: { inhale: number; hold: number; exhale: number; hold2: number }): void {
+    this.phases = phases;
+  }
+
+  setShowPhaseText(v: boolean): void {
+    this.showPhaseText = v;
+    if (!v) {
+      this.textEl.textContent = 'breathe';
+    }
   }
 
   setEnabled(v: boolean): void {
@@ -54,9 +71,35 @@ export class BreathGuide {
       if (this.idleTimer) clearTimeout(this.idleTimer);
     } else {
       this.show();
-      // Start the idle timeout
       if (this.idleTimer) clearTimeout(this.idleTimer);
       this.idleTimer = setTimeout(() => this.hide(), BreathGuide.IDLE_TIMEOUT);
     }
+  }
+
+  private startPhaseUpdater(): void {
+    this.phaseInterval = setInterval(() => {
+      if (!this.showPhaseText || !this.enabled) return;
+      const p = this.phases;
+      const cycle = p.inhale + p.hold + p.exhale + p.hold2;
+      if (cycle <= 0) return;
+
+      const now = performance.now() / 1000;
+      const t = (now - this.cycleStart) % cycle;
+
+      let label: string;
+      if (t < p.inhale) {
+        label = 'inhale';
+      } else if (t < p.inhale + p.hold) {
+        label = 'hold';
+      } else if (t < p.inhale + p.hold + p.exhale) {
+        label = 'exhale';
+      } else {
+        label = 'hold';
+      }
+
+      if (this.textEl.textContent !== label) {
+        this.textEl.textContent = label;
+      }
+    }, 200);
   }
 }

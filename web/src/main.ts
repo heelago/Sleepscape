@@ -109,6 +109,8 @@ state.onChange(() => {
   // Breath guide
   breathGuide.setEnabled(state.breathPulseEnabled);
   breathGuide.setOpacity(state.breathPulseOpacity);
+  breathGuide.setPhases(state.breathPhases);
+  breathGuide.setShowPhaseText(state.breathPhaseText);
 
   // Undo/redo state
   topBar.update();

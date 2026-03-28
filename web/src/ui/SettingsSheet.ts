@@ -201,9 +201,15 @@ export class SettingsSheet {
     }
     card.appendChild(desc);
 
-    // Prominence slider
-    card.appendChild(this.slider('prominence', 0.1, 1.0, this.state.breathPulseOpacity, 'subtle', 'clear', (v) => {
+    // Visibility slider
+    card.appendChild(this.slider('visibility', 0.1, 1.0, this.state.breathPulseOpacity, 'dim', 'bright', (v) => {
       this.state.breathPulseOpacity = v;
+      this.changed();
+    }));
+
+    // Phase text toggle
+    card.appendChild(this.toggle('show phase text', this.state.breathPhaseText, (v) => {
+      this.state.breathPhaseText = v;
       this.changed();
     }));
 
