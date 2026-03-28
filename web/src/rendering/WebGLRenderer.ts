@@ -2,6 +2,8 @@ import type { AppState } from '../state/AppState';
 import { hexToRgb01 } from '../state/types';
 import { StrokeRenderer } from './StrokeRenderer';
 import { ParticleRenderer } from './ParticleRenderer';
+import { PostProcessing } from './PostProcessing';
+import { BreathPulse } from './BreathPulse';
 import type { DrawingEngine } from '../drawing/DrawingEngine';
 
 export interface FBO {
@@ -93,6 +95,7 @@ export class WebGLRenderer {
 
   // FBOs
   strokeFBO!: FBO;
+  private compositeFBO!: FBO; // for brightness cap pass
 
   // Programs
   private compositeProgram!: WebGLProgram;
@@ -101,6 +104,8 @@ export class WebGLRenderer {
   // Sub-renderers
   strokeRenderer!: StrokeRenderer;
   particleRenderer!: ParticleRenderer;
+  postProcessing!: PostProcessing;
+  breathPulse!: BreathPulse;
 
   // Reference to drawing engine (set after construction)
   drawingEngine: DrawingEngine | null = null;
@@ -142,6 +147,12 @@ export class WebGLRenderer {
     // Particle renderer
     this.particleRenderer = new ParticleRenderer(gl, this);
 
+    // Post-processing
+    this.postProcessing = new PostProcessing(gl, this);
+
+    // Breath pulse
+    this.breathPulse = new BreathPulse(gl, this);
+
     // Initial resize
     this.resize();
 
@@ -165,8 +176,10 @@ export class WebGLRenderer {
       // Recreate or resize FBOs
       if (!this.strokeFBO) {
         this.strokeFBO = createFBO(gl, this.pixelWidth, this.pixelHeight);
+        this.compositeFBO = createFBO(gl, this.pixelWidth, this.pixelHeight);
       } else {
         resizeFBO(gl, this.strokeFBO, this.pixelWidth, this.pixelHeight);
+        resizeFBO(gl, this.compositeFBO, this.pixelWidth, this.pixelHeight);
       }
 
       // Clear stroke FBO to background color
@@ -208,22 +221,41 @@ export class WebGLRenderer {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
-  /** Main render loop frame. */
+  /** Main render loop frame -- full pipeline matching Metal render order. */
   draw = (): void => {
     const gl = this.gl;
     const time = performance.now() / 1000 - this.startTime;
+    const state = this.state;
+    const bgColor = hexToRgb01(state.canvasBackground.hex);
+    const inkColor = hexToRgb01(state.currentInkHex);
+    const useBrightnessCap = state.brightnessCap < 1.0;
+
+    // The target for most passes: compositeFBO if we need brightness cap, else screen
+    const compositeTarget = useBrightnessCap ? this.compositeFBO.framebuffer : null;
 
     // Update particles
     if (this.drawingEngine) {
       this.drawingEngine.updateParticles(this.pixelWidth, this.pixelHeight, time);
     }
 
-    // 1. Blit stroke texture to screen (no blend, overwrites background)
-    gl.viewport(0, 0, this.pixelWidth, this.pixelHeight);
-    this.blitTexture(this.strokeFBO.texture, null, 'none');
+    // 1. Blit stroke texture to composite target (no blend, overwrites)
+    this.blitTexture(this.strokeFBO.texture, compositeTarget, 'none');
 
-    // 2. Render particles on top of strokes (to screen directly)
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // 2. Center glow (additive)
+    this.postProcessing.renderCenterGlow(compositeTarget, inkColor, 0.6);
+
+    // 3. Breath pulse (additive, if enabled)
+    if (state.breathPulseEnabled) {
+      this.breathPulse.render(
+        compositeTarget, time, inkColor, 1.0, state.breathPhases,
+      );
+    }
+
+    // 4. Bloom (bright-pass + blur + additive composite)
+    this.postProcessing.renderBloom(this.strokeFBO.texture, compositeTarget, bgColor);
+
+    // 5. Particles
+    gl.bindFramebuffer(gl.FRAMEBUFFER, compositeTarget);
     gl.viewport(0, 0, this.pixelWidth, this.pixelHeight);
 
     if (this.drawingEngine) {
@@ -239,11 +271,21 @@ export class WebGLRenderer {
         this.particleRenderer.renderSparkles(engine.sparkles);
       }
 
-      // Ripples (alpha blend, on top)
+      // Ripples (alpha blend)
       if (engine.ripples.length > 0) {
         this.particleRenderer.renderRipples(engine.ripples);
       }
     }
+
+    // 6. Brightness cap (reads compositeFBO, writes to screen)
+    if (useBrightnessCap) {
+      this.postProcessing.renderBrightnessCap(
+        this.compositeFBO.texture, null, state.brightnessCap,
+      );
+    }
+
+    // 7. Vignette (alpha blend, always last)
+    this.postProcessing.renderVignette(null);
 
     this.animFrame = requestAnimationFrame(this.draw);
   };
