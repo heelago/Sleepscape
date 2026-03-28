@@ -1,6 +1,8 @@
 import type { AppState } from '../state/AppState';
 import { hexToRgb01 } from '../state/types';
 import { StrokeRenderer } from './StrokeRenderer';
+import { ParticleRenderer } from './ParticleRenderer';
+import type { DrawingEngine } from '../drawing/DrawingEngine';
 
 export interface FBO {
   framebuffer: WebGLFramebuffer;
@@ -98,6 +100,10 @@ export class WebGLRenderer {
 
   // Sub-renderers
   strokeRenderer!: StrokeRenderer;
+  particleRenderer!: ParticleRenderer;
+
+  // Reference to drawing engine (set after construction)
+  drawingEngine: DrawingEngine | null = null;
 
   // Canvas pixel dimensions
   pixelWidth = 0;
@@ -105,6 +111,7 @@ export class WebGLRenderer {
   dpr = 1;
 
   private animFrame = 0;
+  private startTime = performance.now() / 1000;
 
   constructor(canvas: HTMLCanvasElement, state: AppState) {
     this.canvas = canvas;
@@ -131,6 +138,9 @@ export class WebGLRenderer {
 
     // Stroke renderer
     this.strokeRenderer = new StrokeRenderer(gl, this);
+
+    // Particle renderer
+    this.particleRenderer = new ParticleRenderer(gl, this);
 
     // Initial resize
     this.resize();
@@ -201,10 +211,39 @@ export class WebGLRenderer {
   /** Main render loop frame. */
   draw = (): void => {
     const gl = this.gl;
+    const time = performance.now() / 1000 - this.startTime;
 
-    // Blit stroke texture to screen
+    // Update particles
+    if (this.drawingEngine) {
+      this.drawingEngine.updateParticles(this.pixelWidth, this.pixelHeight, time);
+    }
+
+    // 1. Blit stroke texture to screen (no blend, overwrites background)
     gl.viewport(0, 0, this.pixelWidth, this.pixelHeight);
     this.blitTexture(this.strokeFBO.texture, null, 'none');
+
+    // 2. Render particles on top of strokes (to screen directly)
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, this.pixelWidth, this.pixelHeight);
+
+    if (this.drawingEngine) {
+      const engine = this.drawingEngine;
+
+      // Ambient blooms (additive)
+      if (engine.ambientBlooms.length > 0) {
+        this.particleRenderer.renderAmbientBlooms(engine.ambientBlooms);
+      }
+
+      // Sparkles (additive)
+      if (engine.sparkles.length > 0) {
+        this.particleRenderer.renderSparkles(engine.sparkles);
+      }
+
+      // Ripples (alpha blend, on top)
+      if (engine.ripples.length > 0) {
+        this.particleRenderer.renderRipples(engine.ripples);
+      }
+    }
 
     this.animFrame = requestAnimationFrame(this.draw);
   };

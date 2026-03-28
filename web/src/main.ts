@@ -15,7 +15,14 @@ const state = new AppState();
 const renderer = new WebGLRenderer(canvas, state);
 
 // Drawing engine
-const engine = new DrawingEngine(state, renderer.strokeRenderer);
+const engine = new DrawingEngine(
+  state,
+  renderer.strokeRenderer,
+  () => ({ width: renderer.pixelWidth, height: renderer.pixelHeight }),
+);
+
+// Wire engine into renderer for particle updates
+renderer.drawingEngine = engine;
 
 // Input
 new InputHandler(canvas, state, engine, () => renderer.dpr);

@@ -15,6 +15,7 @@ export class InputHandler {
   private smoothX = 0;
   private smoothY = 0;
   private lastAcceptedTime = 0;
+  private currentPointerType = 'mouse';
 
   constructor(canvas: HTMLCanvasElement, state: AppState, engine: DrawingEngine, dpr: () => number) {
     this.canvas = canvas;
@@ -60,7 +61,7 @@ export class InputHandler {
     this.smoothX = smoothed.x;
     this.smoothY = smoothed.y;
 
-    this.engine.addPoint(smoothed.x, smoothed.y, pressure, altitude);
+    this.engine.addPoint(smoothed.x, smoothed.y, pressure, altitude, this.currentPointerType === 'pen');
   }
 
   private onPointerDown = (e: PointerEvent): void => {
@@ -77,6 +78,7 @@ export class InputHandler {
     this.smoothX = x;
     this.smoothY = y;
     this.lastAcceptedTime = performance.now();
+    this.currentPointerType = e.pointerType;
 
     this.engine.beginStroke(x, y, pressure, Math.PI / 4);
   };
