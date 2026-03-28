@@ -25,6 +25,7 @@ const renderer = new WebGLRenderer(canvas, state);
 const engine = new DrawingEngine(
   state,
   renderer.strokeRenderer,
+  renderer.ellipseRenderer,
   () => ({ width: renderer.pixelWidth, height: renderer.pixelHeight }),
 );
 

@@ -3,49 +3,12 @@ import { createProgram } from './WebGLRenderer';
 import { generateTransforms, transformCount } from './SymmetryTransform';
 import type { Stroke, StrokePoint, RGBA } from '../state/types';
 import { LineStyle, DrawMode } from '../state/types';
+import { GLOW_PASSES } from './glowPasses';
 
 import strokeVertSrc from './shaders/stroke.vert.glsl';
 import strokeFragSrc from './shaders/stroke.frag.glsl';
 import dotVertSrc from './shaders/dot.vert.glsl';
 import dotFragSrc from './shaders/dot.frag.glsl';
-
-/**
- * 3-pass glow configuration per line style.
- * Each pass: [widthMultiplier, alpha, glowIntensityScaled]
- */
-interface GlowPass {
-  widthMul: number;
-  alpha: number;
-  scaleByGlow: boolean; // whether alpha is scaled by glowIntensity
-}
-
-const GLOW_PASSES: Record<number, GlowPass[]> = {
-  [LineStyle.Neon]: [
-    { widthMul: 3.2, alpha: 0.03, scaleByGlow: true },
-    { widthMul: 1.5, alpha: 0.18, scaleByGlow: true },
-    { widthMul: 0.5, alpha: 0.90, scaleByGlow: false },
-  ],
-  [LineStyle.SoftGlow]: [
-    { widthMul: 4.0, alpha: 0.06, scaleByGlow: true },
-    { widthMul: 2.0, alpha: 0.12, scaleByGlow: true },
-    { widthMul: 0.8, alpha: 0.60, scaleByGlow: false },
-  ],
-  [LineStyle.Dashed]: [
-    { widthMul: 3.2, alpha: 0.03, scaleByGlow: true },
-    { widthMul: 1.5, alpha: 0.18, scaleByGlow: true },
-    { widthMul: 0.5, alpha: 0.90, scaleByGlow: false },
-  ],
-  [LineStyle.Dotted]: [
-    { widthMul: 3.2, alpha: 0.03, scaleByGlow: true },
-    { widthMul: 1.5, alpha: 0.18, scaleByGlow: true },
-    { widthMul: 0.5, alpha: 0.90, scaleByGlow: false },
-  ],
-  [LineStyle.Sketch]: [
-    { widthMul: 3.0, alpha: 0.04, scaleByGlow: true },
-    { widthMul: 1.4, alpha: 0.15, scaleByGlow: true },
-    { widthMul: 0.5, alpha: 0.85, scaleByGlow: false },
-  ],
-};
 
 /** Maximum number of points per stroke buffer upload. */
 const MAX_POINTS = 2048;

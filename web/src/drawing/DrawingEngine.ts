@@ -1,23 +1,47 @@
 import type { AppState } from '../state/AppState';
 import type { StrokeRenderer } from '../rendering/StrokeRenderer';
-import type { Stroke, StrokePoint } from '../state/types';
+import type { EllipseRenderer } from '../rendering/EllipseRenderer';
+import type { Stroke, StrokePoint, EllipseShape } from '../state/types';
 import type { Ripple, Sparkle, AmbientBloom } from '../rendering/ParticleRenderer';
 import { DrawMode } from '../state/types';
 import { generateTransforms, transformCount } from '../rendering/SymmetryTransform';
 import { chaikinSmooth, uid } from '../utils/math';
 
+type RenderEntry =
+  | { type: 'stroke'; stroke: Stroke }
+  | { type: 'ellipse'; ellipse: EllipseShape };
+
+type ActionEntry =
+  | { type: 'stroke'; stroke: Stroke }
+  | { type: 'ellipseGesture'; ellipses: EllipseShape[] };
+
+interface ActiveEllipseGesture {
+  center: [number, number];
+  color: [number, number, number, number];
+  lineWidth: number;
+  mode: DrawMode;
+  symmetry: number;
+  lineStyle: Stroke['lineStyle'];
+  ellipses: EllipseShape[];
+}
+
 /**
- * Manages strokes, undo/redo, and particle systems (ripples, sparkles, ambient blooms).
+ * Manages drawing (strokes + ellipses), undo/redo, and particle systems.
  */
 export class DrawingEngine {
   private state: AppState;
   private strokeRenderer: StrokeRenderer;
+  private ellipseRenderer: EllipseRenderer;
   private getCanvasSize: () => { width: number; height: number };
 
-  // Stroke data
+  // Drawing data
   strokes: Stroke[] = [];
-  private undoneStrokes: Stroke[] = [];
+  ellipses: EllipseShape[] = [];
+  private renderEntries: RenderEntry[] = [];
+  private actions: ActionEntry[] = [];
+  private undoneActions: ActionEntry[] = [];
   private activeStroke: Stroke | null = null;
+  private activeEllipse: ActiveEllipseGesture | null = null;
 
   // Particles
   ripples: Ripple[] = [];
@@ -30,25 +54,40 @@ export class DrawingEngine {
   constructor(
     state: AppState,
     strokeRenderer: StrokeRenderer,
+    ellipseRenderer: EllipseRenderer,
     getCanvasSize: () => { width: number; height: number },
   ) {
     this.state = state;
     this.strokeRenderer = strokeRenderer;
+    this.ellipseRenderer = ellipseRenderer;
     this.getCanvasSize = getCanvasSize;
   }
 
   beginStroke(x: number, y: number, pressure: number, altitude: number): void {
-    const point: StrokePoint = { x, y, pressure, altitude, cumulDist: 0 };
-
-    this.activeStroke = {
-      id: uid(),
-      points: [point],
-      color: this.state.currentInkRGBA,
-      brushSize: this.state.brushSize,
-      mode: this.state.drawMode,
-      lineStyle: this.state.lineStyle,
-      symmetry: this.state.symmetry,
-    };
+    if (this.state.drawMode === DrawMode.Ellipse) {
+      this.activeStroke = null;
+      this.activeEllipse = {
+        center: [x, y],
+        color: this.state.currentInkRGBA,
+        lineWidth: this.state.brushSize,
+        mode: this.state.drawMode,
+        symmetry: this.state.symmetry,
+        lineStyle: this.state.lineStyle,
+        ellipses: [],
+      };
+    } else {
+      const point: StrokePoint = { x, y, pressure, altitude, cumulDist: 0 };
+      this.activeEllipse = null;
+      this.activeStroke = {
+        id: uid(),
+        points: [point],
+        color: this.state.currentInkRGBA,
+        brushSize: this.state.brushSize,
+        mode: this.state.drawMode,
+        lineStyle: this.state.lineStyle,
+        symmetry: this.state.symmetry,
+      };
+    }
 
     // Spawn initial ripple
     if (this.state.ripplesEnabled) {
@@ -57,6 +96,15 @@ export class DrawingEngine {
   }
 
   addPoint(x: number, y: number, pressure: number, altitude: number, isPencil = false): void {
+    if (this.activeEllipse) {
+      this.addEllipsePoint(x, y);
+
+      if (this.state.ripplesEnabled) {
+        this.spawnRipples(x, y);
+      }
+      return;
+    }
+
     if (!this.activeStroke) return;
 
     const points = this.activeStroke.points;
@@ -93,49 +141,97 @@ export class DrawingEngine {
   }
 
   endStroke(): void {
+    if (this.activeEllipse) {
+      this.endEllipseGesture();
+      return;
+    }
     if (!this.activeStroke) return;
 
-    // Apply path smoothing if enabled
-    if (this.state.pathSmoothingEnabled && this.activeStroke.points.length > 2) {
-      this.activeStroke.points = chaikinSmooth(this.activeStroke.points);
-      // Re-render the smoothed stroke
-      this.strokeRenderer.reRenderAll([...this.strokes, this.activeStroke], this.state.glowIntensity);
-    }
-
-    this.strokes.push(this.activeStroke);
-    this.undoneStrokes = [];
+    const stroke = this.activeStroke;
     this.activeStroke = null;
 
-    this.state.canUndo = this.strokes.length > 0;
-    this.state.canRedo = false;
+    // Apply path smoothing if enabled
+    let didSmooth = false;
+    if (this.state.pathSmoothingEnabled && stroke.points.length > 2) {
+      stroke.points = chaikinSmooth(stroke.points);
+      didSmooth = true;
+    }
+
+    this.strokes.push(stroke);
+    this.renderEntries.push({ type: 'stroke', stroke });
+    this.actions.push({ type: 'stroke', stroke });
+    this.undoneActions = [];
+
+    // Re-render only when smoothing changed points already drawn incrementally.
+    if (didSmooth) {
+      this.reRenderAll();
+    }
+
+    this.updateUndoRedoState();
   }
 
   undo(): void {
-    if (this.strokes.length === 0) return;
-    const stroke = this.strokes.pop()!;
-    this.undoneStrokes.push(stroke);
-    this.strokeRenderer.reRenderAll(this.strokes, this.state.glowIntensity);
-    this.state.canUndo = this.strokes.length > 0;
-    this.state.canRedo = this.undoneStrokes.length > 0;
+    if (this.actions.length === 0) return;
+
+    const action = this.actions.pop()!;
+    this.undoneActions.push(action);
+
+    if (action.type === 'stroke') {
+      this.strokes.pop();
+      this.renderEntries.pop();
+    } else {
+      const removeCount = action.ellipses.length;
+      if (removeCount > 0) {
+        this.ellipses.splice(Math.max(0, this.ellipses.length - removeCount), removeCount);
+        this.renderEntries.splice(Math.max(0, this.renderEntries.length - removeCount), removeCount);
+      }
+    }
+
+    this.reRenderAll();
+    this.updateUndoRedoState();
   }
 
   redo(): void {
-    if (this.undoneStrokes.length === 0) return;
-    const stroke = this.undoneStrokes.pop()!;
-    this.strokes.push(stroke);
-    this.strokeRenderer.renderStroke(stroke, this.state.glowIntensity);
-    this.state.canUndo = this.strokes.length > 0;
-    this.state.canRedo = this.undoneStrokes.length > 0;
+    if (this.undoneActions.length === 0) return;
+
+    const action = this.undoneActions.pop()!;
+    this.actions.push(action);
+
+    if (action.type === 'stroke') {
+      this.strokes.push(action.stroke);
+      this.renderEntries.push({ type: 'stroke', stroke: action.stroke });
+      this.strokeRenderer.renderStroke(action.stroke, this.state.glowIntensity);
+    } else {
+      for (const ellipse of action.ellipses) {
+        this.ellipses.push(ellipse);
+        this.renderEntries.push({ type: 'ellipse', ellipse });
+        this.ellipseRenderer.renderEllipse(ellipse, this.state.glowIntensity);
+      }
+    }
+
+    this.updateUndoRedoState();
   }
 
   reRenderAll(): void {
-    this.strokeRenderer.reRenderAll(this.strokes, this.state.glowIntensity);
+    // Clear the persistent drawing surface.
+    this.strokeRenderer.reRenderAll([], this.state.glowIntensity);
+    for (const entry of this.renderEntries) {
+      if (entry.type === 'stroke') {
+        this.strokeRenderer.renderStroke(entry.stroke, this.state.glowIntensity);
+      } else {
+        this.ellipseRenderer.renderEllipse(entry.ellipse, this.state.glowIntensity);
+      }
+    }
   }
 
   clear(): void {
     this.strokes = [];
-    this.undoneStrokes = [];
+    this.ellipses = [];
+    this.renderEntries = [];
+    this.actions = [];
+    this.undoneActions = [];
     this.activeStroke = null;
+    this.activeEllipse = null;
     this.ripples = [];
     this.sparkles = [];
     this.ambientBlooms = [];
@@ -251,16 +347,16 @@ export class DrawingEngine {
     const baseMax = 120 + reach * 280;
     const maxR = baseMax + Math.random() * 30;
 
-    // Spawn at all symmetry-mirrored positions
-    const mode = this.state.drawMode;
-    const sym = this.state.symmetry;
+    // Spawn at all symmetry-mirrored positions.
+    const mode = this.activeStroke?.mode ?? this.activeEllipse?.mode ?? this.state.drawMode;
+    const sym = this.activeStroke?.symmetry ?? this.activeEllipse?.symmetry ?? this.state.symmetry;
     const { width: canvasW, height: canvasH } = this.getCanvasSize();
     const transforms = generateTransforms(mode, sym, canvasW, canvasH);
     const count = transformCount(mode, sym);
 
     for (let t = 0; t < count; t++) {
       const o = t * 9;
-      // Apply 3x3 transform (column-major) to point
+      // Apply 3x3 transform (column-major) to point.
       const tx = transforms[o + 0] * x + transforms[o + 3] * y + transforms[o + 6];
       const ty = transforms[o + 1] * x + transforms[o + 4] * y + transforms[o + 7];
 
@@ -308,5 +404,50 @@ export class DrawingEngine {
     };
 
     this.strokeRenderer.renderStroke(miniStroke, this.state.glowIntensity);
+  }
+
+  private addEllipsePoint(x: number, y: number): void {
+    if (!this.activeEllipse) return;
+
+    const [cx, cy] = this.activeEllipse.center;
+    const rx = Math.abs(x - cx);
+    const ry = Math.abs(y - cy);
+    if (rx < 1 && ry < 1) return;
+
+    const ellipse: EllipseShape = {
+      center: this.activeEllipse.center,
+      radii: [rx, ry],
+      color: this.activeEllipse.color,
+      lineWidth: this.activeEllipse.lineWidth,
+      mode: this.activeEllipse.mode,
+      symmetry: this.activeEllipse.symmetry,
+      lineStyle: this.activeEllipse.lineStyle,
+    };
+
+    this.activeEllipse.ellipses.push(ellipse);
+    this.ellipseRenderer.renderEllipse(ellipse, this.state.glowIntensity);
+  }
+
+  private endEllipseGesture(): void {
+    if (!this.activeEllipse) return;
+
+    const ellipses = this.activeEllipse.ellipses;
+    this.activeEllipse = null;
+
+    if (ellipses.length > 0) {
+      this.ellipses.push(...ellipses);
+      for (const ellipse of ellipses) {
+        this.renderEntries.push({ type: 'ellipse', ellipse });
+      }
+      this.actions.push({ type: 'ellipseGesture', ellipses });
+      this.undoneActions = [];
+    }
+
+    this.updateUndoRedoState();
+  }
+
+  private updateUndoRedoState(): void {
+    this.state.canUndo = this.actions.length > 0;
+    this.state.canRedo = this.undoneActions.length > 0;
   }
 }

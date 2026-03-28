@@ -42,6 +42,16 @@ export interface Stroke {
   symmetry: number;
 }
 
+export interface EllipseShape {
+  center: [number, number];
+  radii: [number, number];
+  color: RGBA;
+  lineWidth: number;
+  mode: DrawMode;
+  symmetry: number;
+  lineStyle: LineStyle;
+}
+
 // ── Color helpers ──
 
 export type RGBA = [number, number, number, number];

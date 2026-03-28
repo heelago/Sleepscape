@@ -1,6 +1,7 @@
 import type { AppState } from '../state/AppState';
 import { hexToRgb01 } from '../state/types';
 import { StrokeRenderer } from './StrokeRenderer';
+import { EllipseRenderer } from './EllipseRenderer';
 import { ParticleRenderer } from './ParticleRenderer';
 import { PostProcessing } from './PostProcessing';
 import { BreathPulse } from './BreathPulse';
@@ -103,6 +104,7 @@ export class WebGLRenderer {
 
   // Sub-renderers
   strokeRenderer!: StrokeRenderer;
+  ellipseRenderer!: EllipseRenderer;
   particleRenderer!: ParticleRenderer;
   postProcessing!: PostProcessing;
   breathPulse!: BreathPulse;
@@ -143,6 +145,9 @@ export class WebGLRenderer {
 
     // Stroke renderer
     this.strokeRenderer = new StrokeRenderer(gl, this);
+
+    // Ellipse renderer
+    this.ellipseRenderer = new EllipseRenderer(gl, this);
 
     // Particle renderer
     this.particleRenderer = new ParticleRenderer(gl, this);
