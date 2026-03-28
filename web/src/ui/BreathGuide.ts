@@ -1,11 +1,12 @@
 /**
- * SVG breath guide that appears after idle. Shows a pulsing circle
- * with "breathe" text, fading in/out.
+ * SVG breath guide overlay. Shows a pulsing circle with "breathe" text.
+ * Always visible while enabled. Hides after 20 minutes of total inactivity.
  */
 export class BreathGuide {
   private el: HTMLElement;
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
   private enabled = true;
+  private static IDLE_TIMEOUT = 20 * 60 * 1000; // 20 minutes
 
   constructor() {
     this.el = document.createElement('div');
@@ -16,17 +17,17 @@ export class BreathGuide {
       </svg>
       <span class="breath-guide-text">breathe</span>
     `;
-    // Tap to dismiss
-    this.el.addEventListener('click', () => this.hide());
     document.body.appendChild(this.el);
   }
 
   /** Reset idle timer. Call on any user interaction. */
   resetIdle(): void {
-    this.hide();
+    // Show if not already visible
+    if (this.enabled) this.show();
+    // Reset the long idle timeout
     if (this.idleTimer) clearTimeout(this.idleTimer);
     if (this.enabled) {
-      this.idleTimer = setTimeout(() => this.show(), 5000);
+      this.idleTimer = setTimeout(() => this.hide(), BreathGuide.IDLE_TIMEOUT);
     }
   }
 
@@ -43,6 +44,11 @@ export class BreathGuide {
     if (!v) {
       this.hide();
       if (this.idleTimer) clearTimeout(this.idleTimer);
+    } else {
+      this.show();
+      // Start the idle timeout
+      if (this.idleTimer) clearTimeout(this.idleTimer);
+      this.idleTimer = setTimeout(() => this.hide(), BreathGuide.IDLE_TIMEOUT);
     }
   }
 }
