@@ -1,4 +1,5 @@
 import type { AppState } from '../state/AppState';
+import { applyTooltip } from './Tooltip';
 
 export interface GripStripCallbacks {
   onPlayPause: () => void;
@@ -35,12 +36,14 @@ export class GripStrip {
     // Play/Pause
     this.playBtn = document.createElement('button');
     this.playBtn.className = 'gripstrip-btn gripstrip-play';
+    applyTooltip(this.playBtn, 'play ambient audio');
     this.playBtn.addEventListener('click', () => this.callbacks.onPlayPause());
     strip.appendChild(this.playBtn);
 
     // Volume
     const volGroup = document.createElement('div');
     volGroup.className = 'gripstrip-vol-group';
+    applyTooltip(volGroup, 'adjust volume');
     const volIcon = document.createElement('span');
     volIcon.className = 'gripstrip-vol-icon';
     volIcon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>';
@@ -63,6 +66,7 @@ export class GripStrip {
     const clearBtn = document.createElement('button');
     clearBtn.className = 'gripstrip-btn gripstrip-clear';
     clearBtn.textContent = 'clear';
+    applyTooltip(clearBtn, 'clear the canvas');
     clearBtn.addEventListener('click', () => this.callbacks.onClear());
     strip.appendChild(clearBtn);
 
@@ -71,6 +75,7 @@ export class GripStrip {
     sleepWrap.className = 'gripstrip-sleep-wrap';
     this.sleepBtn = document.createElement('button');
     this.sleepBtn.className = 'gripstrip-btn gripstrip-sleep';
+    applyTooltip(this.sleepBtn, 'set a sleep timer');
     this.sleepBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg> <span class="sleep-label">sleep</span>';
     this.sleepBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -122,12 +127,14 @@ export class GripStrip {
     const infoBtn = document.createElement('button');
     infoBtn.className = 'gripstrip-btn';
     infoBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    applyTooltip(infoBtn, 'show help');
     infoBtn.addEventListener('click', () => this.callbacks.onInfo());
     strip.appendChild(infoBtn);
 
     // Settings
     this.settingsBtn = document.createElement('button');
     this.settingsBtn.className = 'gripstrip-btn gripstrip-settings';
+    applyTooltip(this.settingsBtn, 'open settings');
     this.settingsBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
     this.settingsBtn.addEventListener('click', () => this.callbacks.onSettingsToggle());
     strip.appendChild(this.settingsBtn);

@@ -10,10 +10,9 @@ void main() {
     float dist = length(vUV);
     if (dist > 1.0) discard;
 
-    // Soft filled glow with ring accent at edge
-    float glow = 1.0 - smoothstep(0.0, 1.0, dist);
-    float ring = smoothstep(0.7, 0.85, dist) * (1.0 - smoothstep(0.9, 1.0, dist));
-    float combined = glow * 0.5 + ring * 0.5;
+    // Hair-thin ring, almost no fill
+    float ring = smoothstep(0.82, 0.92, dist) * (1.0 - smoothstep(0.95, 1.0, dist));
+    float combined = ring;
     if (combined < 0.005) discard;
 
     fragColor = vec4(vColor.rgb, vColor.a * combined);

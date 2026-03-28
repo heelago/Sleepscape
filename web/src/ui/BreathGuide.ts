@@ -44,7 +44,7 @@ export class BreathGuide {
   }
 
   setOpacity(v: number): void {
-    if (this.textEl) this.textEl.style.opacity = `${0.3 + v * 0.5}`;
+    if (this.textEl) this.textEl.style.opacity = `${0.5 + v * 0.5}`;
   }
 
   setPhases(phases: { inhale: number; hold: number; exhale: number; hold2: number }): void {

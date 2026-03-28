@@ -334,7 +334,7 @@ export class DrawingEngine {
 
   private spawnRipples(x: number, y: number): void {
     const now = performance.now() / 1000;
-    if (now - this.lastRippleTime < 1.2) return;
+    if (now - this.lastRippleTime < 2.0) return;
     this.lastRippleTime = now;
 
     const [cr, cg, cb] = [
@@ -342,10 +342,8 @@ export class DrawingEngine {
       this.state.currentInkRGBA[1],
       this.state.currentInkRGBA[2],
     ];
-    const speed = 0.30 + Math.random() * 0.12;
     const reach = (this.state as any).rippleReach ?? 0.5;
     const baseMax = 120 + reach * 280;
-    const maxR = baseMax + Math.random() * 30;
 
     // Spawn at all symmetry-mirrored positions.
     const mode = this.activeStroke?.mode ?? this.activeEllipse?.mode ?? this.state.drawMode;
@@ -360,13 +358,28 @@ export class DrawingEngine {
       const tx = transforms[o + 0] * x + transforms[o + 3] * y + transforms[o + 6];
       const ty = transforms[o + 1] * x + transforms[o + 4] * y + transforms[o + 7];
 
-      this.ripples.push({
-        centerX: tx, centerY: ty,
-        radius: 30, maxRadius: maxR,
-        alpha: 0.85, speed,
-        colorR: cr, colorG: cg, colorB: cb,
-        rings: 3,
-      });
+      // Jitter position for organic feel
+      const jx = (Math.random() - 0.5) * 20;
+      const jy = (Math.random() - 0.5) * 20;
+      const cx = tx + jx;
+      const cy = ty + jy;
+
+      // Spawn 2 concentric rings like a stone in water
+      const baseSpeed = 0.18 + Math.random() * 0.10;
+      const ringStarts = [3, 22];
+      const ringAlphas = [0.40, 0.20];
+      const ringSpeeds = [baseSpeed, baseSpeed * 0.85];
+      const maxR = baseMax + (Math.random() - 0.5) * 50;
+
+      for (let r = 0; r < 2; r++) {
+        this.ripples.push({
+          centerX: cx, centerY: cy,
+          radius: ringStarts[r], maxRadius: maxR,
+          alpha: ringAlphas[r], speed: ringSpeeds[r],
+          colorR: cr, colorG: cg, colorB: cb,
+          rings: 3,
+        });
+      }
     }
   }
 

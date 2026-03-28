@@ -10,6 +10,7 @@ import { SleepOverlay } from './ui/SleepOverlay';
 import { BreathGuide } from './ui/BreathGuide';
 import { Starfield } from './ui/Starfield';
 import { WelcomeOverlay } from './ui/WelcomeOverlay';
+import { runIntroTooltips } from './ui/Tooltip';
 
 // ── Bootstrap ──
 
@@ -91,6 +92,9 @@ const gripStrip = new GripStrip(state, {
 
 // Start render loop
 renderer.start();
+
+// First-visit tooltip intro
+runIntroTooltips();
 
 // ── Breath guide idle timer ──
 

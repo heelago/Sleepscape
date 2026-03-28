@@ -429,7 +429,7 @@
       align-items: center; gap: 12px;
       opacity: 0; pointer-events: none;
       transition: opacity 1.5s ease;
-      z-index: 5;
+      z-index: 8;
     }
     .breath-guide.visible {
       opacity: 1; pointer-events: auto;
@@ -450,8 +450,8 @@
     .breath-guide-text {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic; font-weight: 300;
-      font-size: 14px; color: rgba(255,255,255,0.4);
-      letter-spacing: 3px;
+      font-size: 18px; color: rgba(255,255,255,0.7);
+      letter-spacing: 4px;
       transition: opacity 0.3s ease;
       text-align: center;
       width: 100%;
@@ -516,6 +516,51 @@
     .welcome-start:hover {
       background: rgba(255,255,255,0.1);
       color: rgba(255,255,255,0.8);
+    }
+
+    /* ── Tooltips ── */
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute; bottom: 100%; left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      padding: 4px 10px; border-radius: 8px;
+      background: rgba(12,11,20,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 11px; letter-spacing: 0.5px;
+      white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity 0.2s;
+      z-index: 100;
+    }
+    [data-tooltip]:hover::after { opacity: 1; }
+    /* Top-bar tooltips drop below instead of above */
+    .topbar [data-tooltip]::after {
+      bottom: auto; top: 100%;
+      transform: translateX(-50%) translateY(6px);
+    }
+    /* First-time intro pulse */
+    [data-tooltip].tooltip-intro::after {
+      opacity: 1;
+      animation: tooltip-pulse 2.5s ease-out forwards;
+    }
+    @keyframes tooltip-pulse {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-6px) scale(0.9); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1.05); }
+      30% { transform: translateX(-50%) translateY(-6px) scale(1); }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .topbar [data-tooltip].tooltip-intro::after {
+      animation-name: tooltip-pulse-down;
+    }
+    @keyframes tooltip-pulse-down {
+      0% { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.9); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(6px) scale(1.05); }
+      30% { transform: translateX(-50%) translateY(6px) scale(1); }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     /* ── Settings Hints ── */

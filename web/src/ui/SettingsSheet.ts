@@ -150,7 +150,7 @@ export class SettingsSheet {
       this.changed();
     }));
 
-    card.appendChild(this.hint('expanding rings bloom from each touch'));
+    card.appendChild(this.hint('expanding rings bloom from each touch — turn off here if distracting'));
     card.appendChild(this.toggle('ripples', this.state.ripplesEnabled, (v) => {
       this.state.ripplesEnabled = v;
       this.changed();
