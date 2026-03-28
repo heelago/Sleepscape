@@ -10,15 +10,16 @@ export class AppState {
   // Drawing
   drawMode: DrawMode = DrawMode.Mandala;
   symmetry = 8;
-  brushSize = 0.5;
+  brushSize = 0.3;
   currentPalette: Palette = PALETTES[0];
   currentInkIndex = 0;
   lineStyle: LineStyle = LineStyle.Neon;
 
   // Effects
-  sparklesEnabled = true;
+  sparklesEnabled = false;
   ripplesEnabled = true;
-  bloomsEnabled = true;
+  rippleReach = 0.5;
+  bloomsEnabled = false;
   bloomSpawnRate = 0.5;
   bloomIntensity = 0.6;
 
@@ -33,7 +34,7 @@ export class AppState {
   set brightnessCap(v: number) { this._brightnessCap = v; saveFloat('brightnessCap', v); this.notify(); }
 
   // Breathing
-  breathPulseEnabled = false;
+  breathPulseEnabled = true;
   breathingPresetId = 'resonance';
   customInhale = 4;
   customHold = 2;

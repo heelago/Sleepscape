@@ -238,7 +238,7 @@ export class DrawingEngine {
 
   private spawnRipples(x: number, y: number): void {
     const now = performance.now() / 1000;
-    if (now - this.lastRippleTime < 0.400) return;
+    if (now - this.lastRippleTime < 0.700) return;
     this.lastRippleTime = now;
 
     const [cr, cg, cb] = [
@@ -246,8 +246,10 @@ export class DrawingEngine {
       this.state.currentInkRGBA[1],
       this.state.currentInkRGBA[2],
     ];
-    const speed = 0.35 + Math.random() * 0.15;
-    const maxR = 250 + Math.random() * 50;
+    const speed = 0.30 + Math.random() * 0.12;
+    const reach = (this.state as any).rippleReach ?? 0.5;
+    const baseMax = 120 + reach * 280;
+    const maxR = baseMax + Math.random() * 30;
 
     // Spawn at all symmetry-mirrored positions
     const mode = this.state.drawMode;

@@ -137,16 +137,6 @@ export class SettingsSheet {
   private buildEffectsCard(): HTMLElement {
     const card = this.card('EFFECTS');
 
-    card.appendChild(this.toggle('ambient blooms', this.state.bloomsEnabled, (v) => {
-      this.state.bloomsEnabled = v;
-      this.changed();
-    }));
-
-    card.appendChild(this.slider('intensity', 0.1, 1.0, this.state.bloomIntensity, 'subtle', 'vivid', (v) => {
-      this.state.bloomIntensity = v;
-      this.changed();
-    }));
-
     card.appendChild(this.toggle('sparkles', this.state.sparklesEnabled, (v) => {
       this.state.sparklesEnabled = v;
       this.changed();
@@ -154,6 +144,11 @@ export class SettingsSheet {
 
     card.appendChild(this.toggle('ripples', this.state.ripplesEnabled, (v) => {
       this.state.ripplesEnabled = v;
+      this.changed();
+    }));
+
+    card.appendChild(this.slider('ripple reach', 0.0, 1.0, this.state.rippleReach, 'tight', 'wide', (v) => {
+      this.state.rippleReach = v;
       this.changed();
     }));
 
