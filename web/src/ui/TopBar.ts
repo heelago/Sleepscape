@@ -1,7 +1,7 @@
 import type { AppState } from '../state/AppState';
 import { PALETTES, CANVAS_BACKGROUNDS } from '../state/Palette';
 import { LINE_STYLE_NAMES, LineStyle } from '../state/types';
-import { applyTooltip } from './Tooltip';
+
 
 const BRUSH_SIZES = [
   { label: 'hairline', value: 0.5 },
@@ -92,14 +92,12 @@ export class TopBar {
       this.paletteChips.push(chip);
       paletteScroll.appendChild(chip);
     }
-    applyTooltip(paletteScroll, 'switch colour palettes');
     row1.appendChild(paletteScroll);
 
     // Background picker button
     const bgBtn = document.createElement('button');
     bgBtn.className = 'topbar-icon-btn';
     bgBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>';
-    applyTooltip(bgBtn, 'change canvas background');
     bgBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       this.bgDropdown.classList.toggle('open');
@@ -140,7 +138,6 @@ export class TopBar {
     // Ink dots
     this.inkRow = document.createElement('div');
     this.inkRow.className = 'topbar-ink-row';
-    applyTooltip(this.inkRow, 'pick an ink colour');
     this.buildInkDots();
     row2.appendChild(this.inkRow);
 
@@ -150,7 +147,6 @@ export class TopBar {
     // Brush size button
     const brushBtn = document.createElement('button');
     brushBtn.className = 'topbar-brush-btn';
-    applyTooltip(brushBtn, 'change stroke width');
     this.brushPreview = document.createElement('span');
     this.brushPreview.className = 'topbar-brush-preview';
     brushBtn.appendChild(this.brushPreview);

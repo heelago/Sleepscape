@@ -10,7 +10,6 @@ import { SleepOverlay } from './ui/SleepOverlay';
 import { BreathGuide } from './ui/BreathGuide';
 import { Starfield } from './ui/Starfield';
 import { WelcomeOverlay } from './ui/WelcomeOverlay';
-import { runIntroTooltips } from './ui/Tooltip';
 import { GuidedTour } from './ui/GuidedTour';
 
 // ── Bootstrap ──
@@ -116,10 +115,7 @@ welcomeOverlay.onDismiss((isFirstVisit) => {
 // Start render loop
 renderer.start();
 
-// Tooltip intro (only for returning visitors who already did the tour)
-if (guidedTour.hasCompleted) {
-  runIntroTooltips();
-}
+
 
 // ── Breath guide idle timer ──
 
