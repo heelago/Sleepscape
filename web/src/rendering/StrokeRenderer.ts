@@ -243,8 +243,10 @@ export class StrokeRenderer {
         this.renderSegments(points, color, effectiveBrush, effectiveAlpha, lineStyle, transforms, numTransforms);
       }
 
-      // Render dots
-      this.renderDots(points, color, effectiveBrush, effectiveAlpha, lineStyle, transforms, numTransforms);
+      // Render dots only for dashed and dotted styles
+      if (lineStyle === LineStyle.Dashed || lineStyle === LineStyle.Dotted) {
+        this.renderDots(points, color, effectiveBrush, effectiveAlpha, lineStyle, transforms, numTransforms);
+      }
     }
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);

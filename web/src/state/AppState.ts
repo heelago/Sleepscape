@@ -10,7 +10,7 @@ export class AppState {
   // Drawing
   drawMode: DrawMode = DrawMode.Mandala;
   symmetry = 8;
-  brushSize = 0.3;
+  brushSize = 1.5;
   currentPalette: Palette = PALETTES[0];
   currentInkIndex = 0;
   lineStyle: LineStyle = LineStyle.Neon;
