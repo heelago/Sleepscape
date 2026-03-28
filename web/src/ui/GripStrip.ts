@@ -134,9 +134,13 @@ export class GripStrip {
 
     infoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      this.dismissNudge(infoWrap);
       this.infoMenu.classList.toggle('open');
     });
     infoWrap.appendChild(infoBtn);
+
+    // Bouncing "take a tour" nudge
+    this.buildTourNudge(infoWrap);
 
     this.infoMenu = document.createElement('div');
     this.infoMenu.className = 'gripstrip-info-menu';
@@ -175,6 +179,33 @@ export class GripStrip {
 
     this.update();
     return strip;
+  }
+
+  private buildTourNudge(infoWrap: HTMLElement): void {
+    const nudge = document.createElement('div');
+    nudge.className = 'tour-nudge';
+    nudge.innerHTML = '<span class="tour-nudge-text">take a tour</span><span class="tour-nudge-arrow">&#9662;</span>';
+    nudge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.dismissNudge(infoWrap);
+      this.callbacks.onTour();
+    });
+    infoWrap.appendChild(nudge);
+
+    // Auto-dismiss after 8 seconds
+    setTimeout(() => this.dismissNudge(infoWrap), 8000);
+
+    // Also dismiss on any canvas interaction
+    document.getElementById('canvas')?.addEventListener('pointerdown', () => {
+      this.dismissNudge(infoWrap);
+    }, { once: true });
+  }
+
+  private dismissNudge(infoWrap: HTMLElement): void {
+    const nudge = infoWrap.querySelector('.tour-nudge');
+    if (!nudge) return;
+    (nudge as HTMLElement).style.opacity = '0';
+    setTimeout(() => nudge.remove(), 300);
   }
 
   update(): void {

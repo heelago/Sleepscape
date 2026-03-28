@@ -563,6 +563,34 @@
     }
     .info-menu-option:hover { background: rgba(255,255,255,0.06); }
 
+    /* Tour nudge bubble */
+    .tour-nudge {
+      position: absolute; bottom: 100%; left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 10px;
+      padding: 6px 14px;
+      background: rgba(196,184,232,0.15);
+      border: 1px solid rgba(196,184,232,0.3);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.8);
+      font-family: 'Crimson Pro', serif; font-weight: 300;
+      font-size: 13px; letter-spacing: 0.3px;
+      white-space: nowrap; cursor: pointer;
+      animation: nudge-bounce 2s ease-in-out infinite;
+      transition: opacity 0.3s;
+      z-index: 20;
+    }
+    .tour-nudge-arrow {
+      position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(196,184,232,0.4);
+      font-size: 12px; line-height: 1;
+    }
+    @keyframes nudge-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
+    }
+
     /* ── Welcome Overlay ── */
     .welcome-overlay {
       position: fixed; inset: 0; z-index: 200;
