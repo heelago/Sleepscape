@@ -412,7 +412,7 @@ export class DrawingEngine {
     const [cx, cy] = this.activeEllipse.center;
     const rx = Math.abs(x - cx);
     const ry = Math.abs(y - cy);
-    if (rx < 1 && ry < 1) return;
+    if (rx < 2 && ry < 2) return;
 
     const ellipse: EllipseShape = {
       center: this.activeEllipse.center,
@@ -424,7 +424,11 @@ export class DrawingEngine {
       lineStyle: this.activeEllipse.lineStyle,
     };
 
-    this.activeEllipse.ellipses.push(ellipse);
+    // Replace the preview ellipse (only keep the latest one during drag)
+    this.activeEllipse.ellipses = [ellipse];
+
+    // Re-render everything + the preview ellipse
+    this.reRenderAll();
     this.ellipseRenderer.renderEllipse(ellipse, this.state.glowIntensity);
   }
 
