@@ -36,7 +36,7 @@ export class InputHandler {
 
   private getSmoothingFactor(pointerType: string): number {
     if (this.state.slowInkEnabled) return 0.06;
-    if (pointerType === 'pen') return 0.35;
+    if (pointerType === 'pen') return 0.20;
     return 0.08; // finger / mouse
   }
 
@@ -45,7 +45,9 @@ export class InputHandler {
     const rect = this.canvas.getBoundingClientRect();
     const rawX = (e.clientX - rect.left) * dpr;
     const rawY = (e.clientY - rect.top) * dpr;
-    const pressure = e.pointerType === 'pen' ? e.pressure : 0.5;
+    // Floor pen pressure so light S Pen touches don't produce paper-thin lines
+    const rawPressure = e.pointerType === 'pen' ? e.pressure : 0.5;
+    const pressure = e.pointerType === 'pen' ? Math.max(rawPressure, 0.35) : rawPressure;
     const altitude = Math.PI / 4; // default
 
     // Pace throttle
@@ -73,7 +75,8 @@ export class InputHandler {
     const rect = this.canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * dpr;
     const y = (e.clientY - rect.top) * dpr;
-    const pressure = e.pointerType === 'pen' ? e.pressure : 0.5;
+    const rawP = e.pointerType === 'pen' ? e.pressure : 0.5;
+    const pressure = e.pointerType === 'pen' ? Math.max(rawP, 0.35) : rawP;
 
     this.smoothX = x;
     this.smoothY = y;
