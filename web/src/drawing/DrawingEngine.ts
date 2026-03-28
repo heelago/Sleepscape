@@ -128,6 +128,10 @@ export class DrawingEngine {
     this.state.canRedo = this.undoneStrokes.length > 0;
   }
 
+  reRenderAll(): void {
+    this.strokeRenderer.reRenderAll(this.strokes, this.state.glowIntensity);
+  }
+
   clear(): void {
     this.strokes = [];
     this.undoneStrokes = [];
