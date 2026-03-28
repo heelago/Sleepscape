@@ -3,7 +3,9 @@ import glsl from 'vite-plugin-glsl';
 
 export default defineConfig({
   plugins: [glsl()],
+  base: '/Sleepscape/',
   build: {
     target: 'es2020',
+    outDir: 'dist',
   },
 });

@@ -56,9 +56,9 @@ void main() {
     // Ring position: 8px contracted to maxRadius expanded
     float ringPos = 8.0 + progress * (uMaxRadius - 8.0);
 
-    // Razor-thin gaussian ring (sigma 1.2px)
+    // Gaussian ring (sigma scales with radius for consistent visibility)
     float ringDist = abs(dist - ringPos);
-    float sigma = 1.2;
+    float sigma = max(2.5, ringPos * 0.04);
     float ring = exp(-ringDist * ringDist / (sigma * sigma * 2.0));
 
     // Dotted pattern: 60 dots around circumference
@@ -70,7 +70,7 @@ void main() {
     float isTiny = smoothstep(20.0, 8.0, ringPos);
     dotPattern = mix(dotPattern, 1.0, isTiny);
 
-    float a = ring * dotPattern * 0.005 * glow * uFadeIn;
+    float a = ring * dotPattern * 0.18 * glow * uFadeIn;
     if (a < 0.001) discard;
     fragColor = vec4(uColor.rgb, a);
 }

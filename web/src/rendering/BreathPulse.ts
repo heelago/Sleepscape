@@ -52,7 +52,7 @@ export class BreathPulse {
     const gl = this.gl;
     const w = this.renderer.pixelWidth;
     const h = this.renderer.pixelHeight;
-    const radius = maxRadius ?? Math.min(w, h) * 0.15;
+    const radius = maxRadius ?? Math.min(w, h) * 0.25;
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, target);
     gl.viewport(0, 0, w, h);
