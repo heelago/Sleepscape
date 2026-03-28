@@ -62,6 +62,7 @@ export class SettingsSheet {
 
     // Mode pills
     card.appendChild(this.label('mode'));
+    card.appendChild(this.hint('mandala mirrors your strokes with rotational symmetry'));
     const modeRow = this.pillRow();
     for (const mode of [DrawMode.Free, DrawMode.Mandala]) {
       modeRow.appendChild(this.pill(mode, this.state.drawMode === mode, () => {
@@ -73,6 +74,7 @@ export class SettingsSheet {
 
     // Fold count (only for mandala)
     card.appendChild(this.label('folds'));
+    card.appendChild(this.hint('higher fold counts create more intricate patterns'));
     const foldRow = this.pillRow();
     for (const n of [4, 6, 8, 12, 16]) {
       foldRow.appendChild(this.pill(String(n), this.state.symmetry === n, () => {
@@ -91,6 +93,7 @@ export class SettingsSheet {
 
     // Line style pills
     card.appendChild(this.label('style'));
+    card.appendChild(this.hint('changes how each stroke looks and glows'));
     const styleRow = this.pillRow();
     for (const ls of [LineStyle.Neon, LineStyle.SoftGlow, LineStyle.Dashed, LineStyle.Dotted, LineStyle.Sketch]) {
       styleRow.appendChild(this.pill(LINE_STYLE_NAMES[ls], this.state.lineStyle === ls, () => {
@@ -101,6 +104,7 @@ export class SettingsSheet {
     card.appendChild(styleRow);
 
     // Auto color
+    card.appendChild(this.hint('cycles through the palette as you draw'));
     card.appendChild(this.toggle('auto color', this.state.autoColorEnabled, (v) => {
       this.state.autoColorEnabled = v;
       this.changed();
@@ -113,18 +117,21 @@ export class SettingsSheet {
     }));
 
     // Path smoothing
+    card.appendChild(this.hint('rounds out sharp corners in your strokes'));
     card.appendChild(this.toggle('path smoothing', this.state.pathSmoothingEnabled, (v) => {
       this.state.pathSmoothingEnabled = v;
       this.changed();
     }));
 
     // Slow ink
+    card.appendChild(this.hint('adds resistance for a more deliberate feel'));
     card.appendChild(this.toggle('slow ink', this.state.slowInkEnabled, (v) => {
       this.state.slowInkEnabled = v;
       this.changed();
     }));
 
     // Pace throttle
+    card.appendChild(this.hint('controls how quickly new points are accepted'));
     card.appendChild(this.slider('pace', 0, 120, this.state.paceThrottle, 'free', 'slow', (v) => {
       this.state.paceThrottle = v;
       this.changed();
@@ -137,27 +144,32 @@ export class SettingsSheet {
   private buildEffectsCard(): HTMLElement {
     const card = this.card('EFFECTS');
 
+    card.appendChild(this.hint('bright particles trail along pencil strokes'));
     card.appendChild(this.toggle('sparkles', this.state.sparklesEnabled, (v) => {
       this.state.sparklesEnabled = v;
       this.changed();
     }));
 
+    card.appendChild(this.hint('expanding rings bloom from each touch'));
     card.appendChild(this.toggle('ripples', this.state.ripplesEnabled, (v) => {
       this.state.ripplesEnabled = v;
       this.changed();
     }));
 
+    card.appendChild(this.hint('how far the ripple rings expand outward'));
     card.appendChild(this.slider('ripple reach', 0.0, 1.0, this.state.rippleReach, 'tight', 'wide', (v) => {
       this.state.rippleReach = v;
       this.changed();
     }));
 
+    card.appendChild(this.hint('controls the soft halo around each stroke'));
     card.appendChild(this.slider('glow intensity', 0.0, 1.0, this.state.glowIntensity, 'crisp', 'dreamy', (v) => {
       this.state.glowIntensity = v;
       this.state.needsFullRerender = true;
       this.changed();
     }));
 
+    card.appendChild(this.hint('limits maximum brightness to keep things calm'));
     card.appendChild(this.slider('brightness cap', 0.3, 1.0, this.state.brightnessCap, 'soft', 'full', (v) => {
       this.state.brightnessCap = v;
       this.changed();
@@ -170,6 +182,7 @@ export class SettingsSheet {
   private buildBreathingCard(): HTMLElement {
     const card = this.card('BREATHING');
 
+    card.appendChild(this.hint('an animated ring that guides your breathing'));
     card.appendChild(this.toggle('breath pulse', this.state.breathPulseEnabled, (v) => {
       this.state.breathPulseEnabled = v;
       this.changed();
@@ -177,6 +190,7 @@ export class SettingsSheet {
 
     // Preset pills
     card.appendChild(this.label('pattern'));
+    card.appendChild(this.hint('each pattern has different timing for inhale, hold, and exhale'));
     const presetRow = this.pillRow();
     presetRow.style.flexWrap = 'wrap';
     for (const preset of BREATHING_PRESETS) {
@@ -202,12 +216,14 @@ export class SettingsSheet {
     card.appendChild(desc);
 
     // Visibility slider
+    card.appendChild(this.hint('how prominent the breathing ring appears'));
     card.appendChild(this.slider('visibility', 0.1, 1.0, this.state.breathPulseOpacity, 'dim', 'bright', (v) => {
       this.state.breathPulseOpacity = v;
       this.changed();
     }));
 
     // Phase text toggle
+    card.appendChild(this.hint('displays inhale/hold/exhale inside the ring'));
     card.appendChild(this.toggle('show phase text', this.state.breathPhaseText, (v) => {
       this.state.breathPhaseText = v;
       this.changed();
@@ -280,6 +296,13 @@ export class SettingsSheet {
     l.className = 'settings-label';
     l.textContent = text;
     return l;
+  }
+
+  private hint(text: string): HTMLElement {
+    const p = document.createElement('p');
+    p.className = 'settings-hint';
+    p.textContent = text;
+    return p;
   }
 
   private pillRow(): HTMLElement {

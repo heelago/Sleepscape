@@ -9,6 +9,7 @@ import { SettingsSheet } from './ui/SettingsSheet';
 import { SleepOverlay } from './ui/SleepOverlay';
 import { BreathGuide } from './ui/BreathGuide';
 import { Starfield } from './ui/Starfield';
+import { WelcomeOverlay } from './ui/WelcomeOverlay';
 
 // ── Bootstrap ──
 
@@ -43,6 +44,7 @@ const audioEngine = new AudioEngine();
 new Starfield();
 const breathGuide = new BreathGuide();
 const sleepOverlay = new SleepOverlay();
+const welcomeOverlay = new WelcomeOverlay();
 
 const topBar = new TopBar(state, {
   onUndo: () => engine.undo(),
@@ -84,6 +86,7 @@ const gripStrip = new GripStrip(state, {
     }
     gripStrip.update();
   },
+  onInfo: () => welcomeOverlay.show(),
 });
 
 // Start render loop

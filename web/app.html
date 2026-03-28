@@ -471,6 +471,60 @@
       0%, 100% { opacity: 0.15; }
       50% { opacity: 0.7; }
     }
+
+    /* ── Welcome Overlay ── */
+    .welcome-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(4,3,10,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+    .welcome-overlay.visible { opacity: 1; pointer-events: auto; }
+    .welcome-content {
+      max-width: 380px; padding: 0 24px;
+      text-align: center;
+    }
+    .welcome-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: 28px; color: rgba(255,255,255,0.25);
+      letter-spacing: 2px; margin-bottom: 32px;
+    }
+    .welcome-tip { margin-bottom: 24px; }
+    .welcome-tip-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: 17px; color: rgba(196,184,232,0.7);
+      letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .welcome-tip-desc {
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 13px; color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+    .welcome-start {
+      margin-top: 20px; padding: 8px 28px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.6);
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 13px; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .welcome-start:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── Settings Hints ── */
+    .settings-hint {
+      font-weight: 200; font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin: -2px 0 4px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
