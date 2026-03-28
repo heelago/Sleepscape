@@ -8,6 +8,7 @@ import { GripStrip } from './ui/GripStrip';
 import { SettingsSheet } from './ui/SettingsSheet';
 import { SleepOverlay } from './ui/SleepOverlay';
 import { BreathGuide } from './ui/BreathGuide';
+import { Starfield } from './ui/Starfield';
 
 // ── Bootstrap ──
 
@@ -38,6 +39,7 @@ const audioEngine = new AudioEngine();
 
 // ── UI ──
 
+new Starfield();
 const breathGuide = new BreathGuide();
 const sleepOverlay = new SleepOverlay();
 
@@ -156,6 +158,54 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     engine.clear();
     renderer.clearStrokeTexture();
+  }
+});
+
+// ── Auto-color cycling ──
+
+let autoColorTimer: ReturnType<typeof setInterval> | null = null;
+
+function startAutoColor(): void {
+  if (autoColorTimer) return;
+  const intervalMs = () => Math.max(2000, (1.0 / state.autoColorSpeed) * 1000);
+  const tick = () => {
+    if (!state.autoColorEnabled) { stopAutoColor(); return; }
+    state.currentInkIndex = (state.currentInkIndex + 1) % state.currentPalette.inks.length;
+    state.notify();
+    topBar.update();
+    autoColorTimer = setTimeout(tick, intervalMs());
+  };
+  autoColorTimer = setTimeout(tick, intervalMs());
+}
+
+function stopAutoColor(): void {
+  if (autoColorTimer) { clearTimeout(autoColorTimer); autoColorTimer = null; }
+}
+
+if (state.autoColorEnabled) startAutoColor();
+state.onChange(() => {
+  if (state.autoColorEnabled && !autoColorTimer) startAutoColor();
+  else if (!state.autoColorEnabled && autoColorTimer) stopAutoColor();
+});
+
+// ── Save canvas to PNG ──
+
+function saveCanvasPNG(): void {
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sleepscape-${Date.now()}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    saveCanvasPNG();
   }
 });
 

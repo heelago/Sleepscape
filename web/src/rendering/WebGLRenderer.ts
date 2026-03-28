@@ -126,7 +126,7 @@ export class WebGLRenderer {
       alpha: false,
       antialias: false,
       premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
+      preserveDrawingBuffer: true,
     });
     if (!gl) throw new Error('WebGL2 not supported');
     this.gl = gl;
