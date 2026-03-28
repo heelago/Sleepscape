@@ -334,7 +334,7 @@ export class DrawingEngine {
 
   private spawnRipples(x: number, y: number): void {
     const now = performance.now() / 1000;
-    if (now - this.lastRippleTime < 0.700) return;
+    if (now - this.lastRippleTime < 1.2) return;
     this.lastRippleTime = now;
 
     const [cr, cg, cb] = [

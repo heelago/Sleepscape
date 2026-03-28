@@ -46,7 +46,7 @@ export class AppState {
   // Stroke behavior (persisted)
   private _pathSmoothing = loadBool('pathSmoothing', false);
   private _slowInk = loadBool('slowInk', false);
-  private _paceThrottle = loadFloat('paceThrottle', 0);
+  private _paceThrottle = loadFloat('paceThrottle', 40);
 
   get pathSmoothingEnabled(): boolean { return this._pathSmoothing; }
   set pathSmoothingEnabled(v: boolean) { this._pathSmoothing = v; saveBool('pathSmoothing', v); }
