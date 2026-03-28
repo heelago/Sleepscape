@@ -1,10 +1,30 @@
 # Ellipse Renderer Port — Web Implementation Plan
 
+> **STATUS: ATTEMPTED & REVERTED (2026-03-28)**
+>
+> An initial implementation was merged (commit `1572f55`) but the behavior
+> did not match the native iPad app — ellipses accumulated on every drag
+> point, filling the screen. The UI pill was removed (commit `250efaa`)
+> but the renderer code remains in the codebase:
+>
+> - `web/src/rendering/EllipseRenderer.ts` — renderer class (DO NOT expose in UI yet)
+> - `web/src/rendering/shaders/ellipse.vert.glsl` / `ellipse.frag.glsl` — shaders
+> - `web/src/rendering/glowPasses.ts` — extracted glow pass config (shared with StrokeRenderer)
+> - `web/src/drawing/DrawingEngine.ts` — has ellipse gesture handling code
+> - `web/src/state/types.ts` — has `EllipseShape` interface
+>
+> **The ellipse pill is intentionally hidden** in `SettingsSheet.ts` (only `Free` and `Mandala`
+> are listed). Do not re-add it without fixing the core interaction model first.
+>
+> **Key issue to solve:** The native app's ellipse mode places a single ring per
+> drag gesture (center on touch-down, radii from drag). The web implementation
+> needs to preview the ellipse during drag WITHOUT baking intermediates to the
+> persistent stroke texture. This likely requires a separate preview FBO or
+> rendering the active ellipse in the composite pass rather than the stroke pass.
+
 ## Context
 
 The native iPad app has a dedicated ellipse drawing mode with its own Metal shader pipeline (`ellipseVertex`/`ellipseFragment` in `Shaders.metal`). In ellipse mode, the user drags to place concentric elliptical rings that are mirrored across all symmetry axes. This is fundamentally different from stroke-based drawing — it renders ring shapes with configurable radii and line width, not freehand paths.
-
-The web app currently has `DrawMode.Ellipse` in the enum and a UI pill in settings, but it falls through to mandala stroke rendering. This plan covers implementing the proper ellipse renderer.
 
 ## Reference: Native Metal Implementation
 
