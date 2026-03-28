@@ -158,7 +158,7 @@ class TouchCaptureMTKView: MTKView {
             return SIMD2<Float>(t.x, t.y)
         }
         if coord.appState.ripplesEnabled {
-            coord.drawingEngine.spawnRipples(at: centers, color: inkColor, time: rippleTime)
+            coord.drawingEngine.spawnRipples(at: centers, color: inkColor, time: rippleTime, reach: coord.appState.rippleReach)
         }
     }
 

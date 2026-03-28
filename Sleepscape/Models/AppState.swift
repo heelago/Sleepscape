@@ -72,14 +72,15 @@ class AppState {
     // Drawing
     var drawMode: DrawMode = .mandala
     var symmetry: Int = 8
-    var brushSize: Float = 0.5
+    var brushSize: Float = 0.3
     var currentPalette: Palette = Palette.all[0]
     var currentInkIndex: Int = 0
     var lineStyle: LineStyle = .neon
 
     // Effects
-    var sparklesEnabled: Bool = true
+    var sparklesEnabled: Bool = false
     var ripplesEnabled: Bool = true
+    var rippleReach: Float = 0.5  // 0→1, maps to max radius
 
     // Ambient blooms
     var bloomsEnabled: Bool = true
@@ -103,7 +104,7 @@ class AppState {
     }
 
     // Breath pulse + breathing pattern
-    var breathPulseEnabled: Bool = false
+    var breathPulseEnabled: Bool = true
     var breathingPreset: BreathingPreset = .resonance
     var customInhale: Float = 4
     var customHold: Float = 2

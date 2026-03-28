@@ -224,36 +224,6 @@ struct SettingsSheet: View {
     private var effectsCard: some View {
         settingsCard(title: "EFFECTS") {
             VStack(alignment: .leading, spacing: 10) {
-                // Ambient blooms
-                HStack {
-                    sectionLabel("ambient blooms")
-                    Spacer()
-                    Toggle("", isOn: Binding(
-                        get: { appState.bloomsEnabled },
-                        set: {
-                            appState.bloomsEnabled = $0
-                            resetAutoClose()
-                        }
-                    ))
-                    .labelsHidden()
-                    .tint(.white.opacity(0.3))
-                    .scaleEffect(0.75)
-                }
-
-                if appState.bloomsEnabled {
-                    Slider(
-                        value: Binding(
-                            get: { Double(appState.bloomIntensity) },
-                            set: {
-                                appState.bloomIntensity = Float($0)
-                                resetAutoClose()
-                            }
-                        ),
-                        in: 0.1...1.0
-                    )
-                    .tint(.white.opacity(0.3))
-                }
-
                 // Sparkles toggle
                 HStack {
                     sectionLabel("sparkles")
@@ -284,6 +254,31 @@ struct SettingsSheet: View {
                     .labelsHidden()
                     .tint(.white.opacity(0.3))
                     .scaleEffect(0.75)
+                }
+
+                if appState.ripplesEnabled {
+                    VStack(alignment: .leading, spacing: 4) {
+                        sectionLabel("ripple reach")
+                        HStack(spacing: 6) {
+                            Text("tight")
+                                .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                                .foregroundStyle(.white.opacity(0.55))
+                            Slider(
+                                value: Binding(
+                                    get: { Double(appState.rippleReach) },
+                                    set: {
+                                        appState.rippleReach = Float($0)
+                                        resetAutoClose()
+                                    }
+                                ),
+                                in: 0.0...1.0
+                            )
+                            .tint(.white.opacity(0.3))
+                            Text("wide")
+                                .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                                .foregroundStyle(.white.opacity(0.55))
+                        }
+                    }
                 }
 
                 // Divider

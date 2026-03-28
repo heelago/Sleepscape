@@ -237,12 +237,13 @@ class DrawingEngine {
 
     // MARK: - Ripples
 
-    func spawnRipples(at centers: [SIMD2<Float>], color: SIMD4<Float>, time: CFTimeInterval) {
-        guard time - lastRippleTime >= 0.400 else { return }
+    func spawnRipples(at centers: [SIMD2<Float>], color: SIMD4<Float>, time: CFTimeInterval, reach: Float = 0.5) {
+        guard time - lastRippleTime >= 0.700 else { return }
         lastRippleTime = time
 
-        let speed: Float = 0.35 + Float.random(in: 0...0.15)
-        let maxR: Float = 250 + Float.random(in: 0...50)
+        let speed: Float = 0.30 + Float.random(in: 0...0.12)
+        let baseMax: Float = 120 + reach * 280  // reach 0→120, reach 1→400
+        let maxR: Float = baseMax + Float.random(in: 0...30)
 
         for center in centers {
             let ripple = Ripple(
