@@ -244,17 +244,10 @@ export class WebGLRenderer {
     // 2. Center glow (additive)
     this.postProcessing.renderCenterGlow(compositeTarget, inkColor, 0.6);
 
-    // 3. Breath pulse (additive, if enabled)
-    if (state.breathPulseEnabled) {
-      this.breathPulse.render(
-        compositeTarget, time, inkColor, 1.0, state.breathPhases,
-      );
-    }
-
-    // 4. Bloom (bright-pass + blur + additive composite)
+    // 3. Bloom (bright-pass + blur + additive composite)
     this.postProcessing.renderBloom(this.strokeFBO.texture, compositeTarget, bgColor);
 
-    // 5. Particles
+    // 4. Particles
     gl.bindFramebuffer(gl.FRAMEBUFFER, compositeTarget);
     gl.viewport(0, 0, this.pixelWidth, this.pixelHeight);
 
@@ -275,6 +268,14 @@ export class WebGLRenderer {
       if (engine.ripples.length > 0) {
         this.particleRenderer.renderRipples(engine.ripples);
       }
+    }
+
+    // 5. Breath pulse (additive, rendered on top of all drawing content)
+    if (state.breathPulseEnabled) {
+      const opacity = (state as any).breathPulseOpacity ?? 0.5;
+      this.breathPulse.render(
+        compositeTarget, time, inkColor, opacity, state.breathPhases,
+      );
     }
 
     // 6. Brightness cap (reads compositeFBO, writes to screen)

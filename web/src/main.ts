@@ -106,6 +106,10 @@ state.onChange(() => {
     // Preset change handled via settings callback
   }
 
+  // Breath guide
+  breathGuide.setEnabled(state.breathPulseEnabled);
+  breathGuide.setOpacity(state.breathPulseOpacity);
+
   // Undo/redo state
   topBar.update();
 });

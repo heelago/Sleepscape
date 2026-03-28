@@ -35,6 +35,7 @@ export class AppState {
 
   // Breathing
   breathPulseEnabled = true;
+  breathPulseOpacity = 0.5;  // 0→1, controls prominence of breath ring
   breathingPresetId = 'resonance';
   customInhale = 4;
   customHold = 2;

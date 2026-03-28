@@ -63,7 +63,7 @@ export class SettingsSheet {
     // Mode pills
     card.appendChild(this.label('mode'));
     const modeRow = this.pillRow();
-    for (const mode of [DrawMode.Free, DrawMode.Mandala]) {
+    for (const mode of [DrawMode.Free, DrawMode.Mandala, DrawMode.Ellipse]) {
       modeRow.appendChild(this.pill(mode, this.state.drawMode === mode, () => {
         this.state.drawMode = mode;
         this.changed();
@@ -200,6 +200,12 @@ export class SettingsSheet {
       desc.textContent = `${currentPreset.subtitle} \u00b7 ${phases.inhale}s in \u00b7 ${phases.hold}s hold \u00b7 ${phases.exhale}s out`;
     }
     card.appendChild(desc);
+
+    // Prominence slider
+    card.appendChild(this.slider('prominence', 0.1, 1.0, this.state.breathPulseOpacity, 'subtle', 'clear', (v) => {
+      this.state.breathPulseOpacity = v;
+      this.changed();
+    }));
 
     // Custom sliders (show only when custom)
     if (this.state.breathingPresetId === 'custom') {

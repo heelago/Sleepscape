@@ -35,6 +35,14 @@ export class BreathGuide {
     this.el.classList.add('visible');
   }
 
+  setOpacity(v: number): void {
+    // Scale the SVG circle stroke and text opacity with prominence
+    const circle = this.el.querySelector('.breath-guide-circle') as SVGElement | null;
+    const text = this.el.querySelector('.breath-guide-text') as HTMLElement | null;
+    if (circle) circle.style.strokeOpacity = `${0.08 + v * 0.35}`;
+    if (text) text.style.opacity = `${0.18 + v * 0.5}`;
+  }
+
   hide(): void {
     this.el.classList.remove('visible');
   }
