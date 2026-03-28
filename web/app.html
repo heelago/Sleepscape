@@ -472,6 +472,97 @@
       50% { opacity: 0.7; }
     }
 
+    /* ── Guided Tour ── */
+    .tour-overlay {
+      position: fixed; inset: 0; z-index: 299;
+      pointer-events: auto;
+    }
+    .tour-spotlight {
+      position: fixed; z-index: 300;
+      border-radius: 12px;
+      box-shadow: 0 0 0 9999px rgba(4,3,10,0.88);
+      pointer-events: none;
+      transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease;
+    }
+    .tour-card {
+      position: fixed; z-index: 301;
+      max-width: 280px;
+      background: rgba(12,11,20,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 16px 18px;
+      pointer-events: auto;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .tour-card.visible { opacity: 1; transform: translateY(0); }
+    .tour-card-counter {
+      font-weight: 200; font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .tour-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: 16px; color: rgba(196,184,232,0.7);
+      letter-spacing: 1px; margin-bottom: 6px;
+    }
+    .tour-card-desc {
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      line-height: 1.5; margin-bottom: 14px;
+    }
+    .tour-card-actions {
+      display: flex; justify-content: flex-end; gap: 10px;
+    }
+    .tour-card-skip {
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.3);
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 12px; cursor: pointer;
+    }
+    .tour-card-next {
+      padding: 5px 16px; border-radius: 14px;
+      background: rgba(196,184,232,0.16);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      font-family: 'Crimson Pro', serif; font-weight: 200;
+      font-size: 12px; letter-spacing: 0.5px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tour-card-next:hover {
+      background: rgba(196,184,232,0.25);
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* Info menu (same pattern as sleep menu) */
+    .gripstrip-info-wrap { position: relative; }
+    .gripstrip-info-menu {
+      position: absolute; bottom: 100%; left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(12,11,20,0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 8px 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none;
+      transition: all 0.2s; min-width: 150px;
+      margin-bottom: 8px; z-index: 20;
+    }
+    .gripstrip-info-menu.open {
+      opacity: 1; pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .info-menu-option {
+      display: block; width: 100%;
+      padding: 6px 0; background: transparent;
+      border: none; color: rgba(255,255,255,0.65);
+      font-family: 'Crimson Pro', serif; font-weight: 300;
+      font-size: 13px; cursor: pointer;
+      text-align: center; border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .info-menu-option:hover { background: rgba(255,255,255,0.06); }
+
     /* ── Welcome Overlay ── */
     .welcome-overlay {
       position: fixed; inset: 0; z-index: 200;

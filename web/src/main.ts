@@ -11,6 +11,7 @@ import { BreathGuide } from './ui/BreathGuide';
 import { Starfield } from './ui/Starfield';
 import { WelcomeOverlay } from './ui/WelcomeOverlay';
 import { runIntroTooltips } from './ui/Tooltip';
+import { GuidedTour } from './ui/GuidedTour';
 
 // ── Bootstrap ──
 
@@ -88,13 +89,37 @@ const gripStrip = new GripStrip(state, {
     gripStrip.update();
   },
   onInfo: () => welcomeOverlay.show(),
+  onTour: () => guidedTour.start(),
+});
+
+// Guided tour
+const guidedTour = new GuidedTour({
+  settingsSheet,
+  onSettingsOpen: () => {
+    state.showSettings = true;
+    settingsSheet.open();
+    gripStrip.update();
+  },
+  onSettingsClose: () => {
+    settingsSheet.close();
+    gripStrip.update();
+  },
+});
+
+// Auto-start tour after first welcome dismiss
+welcomeOverlay.onDismiss((isFirstVisit) => {
+  if (isFirstVisit && !guidedTour.hasCompleted) {
+    guidedTour.start();
+  }
 });
 
 // Start render loop
 renderer.start();
 
-// First-visit tooltip intro
-runIntroTooltips();
+// Tooltip intro (only for returning visitors who already did the tour)
+if (guidedTour.hasCompleted) {
+  runIntroTooltips();
+}
 
 // ── Breath guide idle timer ──
 

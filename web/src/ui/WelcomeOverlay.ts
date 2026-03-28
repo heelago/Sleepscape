@@ -13,15 +13,23 @@ const TIPS: { label: string; desc: string }[] = [
  */
 export class WelcomeOverlay {
   private el: HTMLElement;
+  private isFirstVisit: boolean;
+  private onDismissCallback: ((isFirstVisit: boolean) => void) | null = null;
 
   constructor() {
+    this.isFirstVisit = !localStorage.getItem(STORAGE_KEY);
     this.el = this.build();
     document.body.appendChild(this.el);
 
     // Show on first visit
-    if (!localStorage.getItem(STORAGE_KEY)) {
+    if (this.isFirstVisit) {
       requestAnimationFrame(() => this.show());
     }
+  }
+
+  /** Register a callback fired when the overlay is dismissed. */
+  onDismiss(cb: (isFirstVisit: boolean) => void): void {
+    this.onDismissCallback = cb;
   }
 
   show(): void {
@@ -29,8 +37,14 @@ export class WelcomeOverlay {
   }
 
   private dismiss(): void {
+    const wasFirst = this.isFirstVisit;
+    this.isFirstVisit = false;
     localStorage.setItem(STORAGE_KEY, 'true');
     this.el.classList.remove('visible');
+    if (this.onDismissCallback) {
+      // Small delay so the fade-out starts before tour begins
+      setTimeout(() => this.onDismissCallback!(wasFirst), 400);
+    }
   }
 
   private build(): HTMLElement {

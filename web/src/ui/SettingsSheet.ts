@@ -13,6 +13,7 @@ export class SettingsSheet {
   private state: AppState;
   private onChanged: () => void;
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
+  private idlePaused = false;
 
   constructor(state: AppState, onChanged: () => void) {
     this.state = state;
@@ -407,7 +408,18 @@ export class SettingsSheet {
     return this.el.classList.contains('open');
   }
 
+  pauseIdleTimer(): void {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idlePaused = true;
+  }
+
+  resumeIdleTimer(): void {
+    this.idlePaused = false;
+    this.resetIdleTimer();
+  }
+
   private resetIdleTimer(): void {
+    if (this.idlePaused) return;
     if (this.idleTimer) clearTimeout(this.idleTimer);
     this.idleTimer = setTimeout(() => this.close(), 10000);
   }

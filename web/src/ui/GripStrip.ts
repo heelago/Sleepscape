@@ -6,6 +6,7 @@ export interface GripStripCallbacks {
   onClear: () => void;
   onSettingsToggle: () => void;
   onInfo: () => void;
+  onTour: () => void;
 }
 
 /**
@@ -20,6 +21,7 @@ export class GripStrip {
   private volumeSlider!: HTMLInputElement;
   private sleepBtn!: HTMLElement;
   private sleepMenu!: HTMLElement;
+  private infoMenu!: HTMLElement;
   private settingsBtn!: HTMLElement;
 
   constructor(state: AppState, callbacks: GripStripCallbacks) {
@@ -123,13 +125,39 @@ export class GripStrip {
     sleepWrap.appendChild(this.sleepMenu);
     strip.appendChild(sleepWrap);
 
-    // Info
+    // Info (with menu)
+    const infoWrap = document.createElement('div');
+    infoWrap.className = 'gripstrip-info-wrap';
     const infoBtn = document.createElement('button');
     infoBtn.className = 'gripstrip-btn';
     infoBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
     applyTooltip(infoBtn, 'show help');
-    infoBtn.addEventListener('click', () => this.callbacks.onInfo());
-    strip.appendChild(infoBtn);
+    infoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.infoMenu.classList.toggle('open');
+    });
+    infoWrap.appendChild(infoBtn);
+
+    this.infoMenu = document.createElement('div');
+    this.infoMenu.className = 'gripstrip-info-menu';
+    const aboutBtn = document.createElement('button');
+    aboutBtn.className = 'info-menu-option';
+    aboutBtn.textContent = 'about sleepscape';
+    aboutBtn.addEventListener('click', () => {
+      this.infoMenu.classList.remove('open');
+      this.callbacks.onInfo();
+    });
+    this.infoMenu.appendChild(aboutBtn);
+    const tourBtn = document.createElement('button');
+    tourBtn.className = 'info-menu-option';
+    tourBtn.textContent = 'take a tour';
+    tourBtn.addEventListener('click', () => {
+      this.infoMenu.classList.remove('open');
+      this.callbacks.onTour();
+    });
+    this.infoMenu.appendChild(tourBtn);
+    infoWrap.appendChild(this.infoMenu);
+    strip.appendChild(infoWrap);
 
     // Settings
     this.settingsBtn = document.createElement('button');
@@ -139,9 +167,10 @@ export class GripStrip {
     this.settingsBtn.addEventListener('click', () => this.callbacks.onSettingsToggle());
     strip.appendChild(this.settingsBtn);
 
-    // Close sleep menu on outside click
+    // Close menus on outside click
     document.addEventListener('click', () => {
       this.sleepMenu.classList.remove('open');
+      this.infoMenu.classList.remove('open');
     });
 
     this.update();
