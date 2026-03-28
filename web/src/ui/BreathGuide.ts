@@ -18,9 +18,6 @@ export class BreathGuide {
     this.el = document.createElement('div');
     this.el.className = 'breath-guide';
     this.el.innerHTML = `
-      <svg viewBox="0 0 120 120" class="breath-guide-svg">
-        <circle cx="60" cy="60" r="40" class="breath-guide-circle" />
-      </svg>
       <span class="breath-guide-text">breathe</span>
     `;
     this.textEl = this.el.querySelector('.breath-guide-text')!;
@@ -47,9 +44,6 @@ export class BreathGuide {
   }
 
   setOpacity(v: number): void {
-    const circle = this.el.querySelector('.breath-guide-circle') as SVGElement | null;
-    // Higher base opacity, scaled more aggressively
-    if (circle) circle.style.strokeOpacity = `${0.15 + v * 0.55}`;
     if (this.textEl) this.textEl.style.opacity = `${0.3 + v * 0.5}`;
   }
 
