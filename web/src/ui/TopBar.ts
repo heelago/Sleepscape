@@ -52,9 +52,13 @@ export class TopBar {
     row1.className = 'topbar-row';
 
     // Wordmark
-    const wordmark = document.createElement('span');
+    const wordmark = document.createElement('a');
     wordmark.className = 'topbar-wordmark';
     wordmark.textContent = 'sleepscape';
+    wordmark.href = './';
+    wordmark.style.textDecoration = 'none';
+    wordmark.style.color = 'inherit';
+    wordmark.style.cursor = 'pointer';
     row1.appendChild(wordmark);
 
     // Divider
