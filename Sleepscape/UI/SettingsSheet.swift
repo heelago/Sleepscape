@@ -361,6 +361,46 @@ struct SettingsSheet: View {
                 }
 
                 if appState.breathPulseEnabled {
+                    // Visibility slider
+                    VStack(alignment: .leading, spacing: 4) {
+                        sectionLabel("visibility")
+                        HStack(spacing: 6) {
+                            Text("dim")
+                                .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                                .foregroundStyle(.white.opacity(0.55))
+                            Slider(
+                                value: Binding(
+                                    get: { Double(appState.breathPulseOpacity) },
+                                    set: {
+                                        appState.breathPulseOpacity = Float($0)
+                                        resetAutoClose()
+                                    }
+                                ),
+                                in: 0.1...1.0
+                            )
+                            .tint(.white.opacity(0.3))
+                            Text("bright")
+                                .font(.custom("CrimsonPro-ExtraLight", size: 10))
+                                .foregroundStyle(.white.opacity(0.55))
+                        }
+                    }
+
+                    // Phase text toggle
+                    HStack {
+                        sectionLabel("show phase text")
+                        Spacer()
+                        Toggle("", isOn: Binding(
+                            get: { appState.breathPhaseText },
+                            set: {
+                                appState.breathPhaseText = $0
+                                resetAutoClose()
+                            }
+                        ))
+                        .labelsHidden()
+                        .tint(.white.opacity(0.3))
+                        .scaleEffect(0.75)
+                    }
+
                     // Preset pills
                     VStack(alignment: .leading, spacing: 4) {
                         sectionLabel("pattern")

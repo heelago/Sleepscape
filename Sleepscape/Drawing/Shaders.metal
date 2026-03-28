@@ -743,7 +743,7 @@ fragment float4 breathPulseFragment(QuadVertex in [[stage_in]],
     float isTiny = smoothstep(20.0, 8.0, ringPos);
     dotPattern = mix(dotPattern, 1.0, isTiny);
 
-    float a = ring * dotPattern * 0.005 * glow * u.fadeIn;
+    float a = ring * dotPattern * 0.08 * glow * u.fadeIn;
     if (a < 0.001) discard_fragment();
     return float4(u.color.rgb, a);
 }

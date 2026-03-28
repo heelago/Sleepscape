@@ -1,43 +1,51 @@
 import SwiftUI
 
-/// Breathing guide animation — appears after 5s of inactivity.
-/// Animates on a 9-second cycle matching 6 breaths/minute.
-/// Full animation implementation in Phase 10.
+/// Breathing guide overlay — shows phase text (inhale/hold/exhale) centered on screen.
+/// Always visible while breath pulse is enabled. The WebGL/Metal ring handles the
+/// visual animation; this view only renders the text label.
 struct BreathGuide: View {
-    @State private var phase: CGFloat = 0
+    let phases: (inhale: Float, hold: Float, exhale: Float, hold2: Float)
+    let showPhaseText: Bool
+    let opacity: Float
+
+    @State private var currentLabel: String = "breathe"
+    @State private var timer: Timer?
 
     var body: some View {
-        TimelineView(.animation) { timeline in
-            Canvas { context, size in
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                let radius: CGFloat = 60
-                let time = timeline.date.timeIntervalSinceReferenceDate
-                let cycle = time.truncatingRemainder(dividingBy: 9.0) / 9.0
+        Text(currentLabel)
+            .font(.custom("CrimsonPro-ExtraLight", size: 14))
+            .foregroundColor(.white.opacity(Double(0.3 + opacity * 0.5)))
+            .tracking(3)
+            .allowsHitTesting(false)
+            .onAppear { startUpdating() }
+            .onDisappear { timer?.invalidate() }
+            .onChange(of: showPhaseText) { startUpdating() }
+    }
 
-                // Breathing circle — scale oscillates
-                let scale = 0.6 + 0.4 * sin(cycle * .pi * 2)
-                let r = radius * scale
+    private func startUpdating() {
+        timer?.invalidate()
+        if !showPhaseText {
+            currentLabel = "breathe"
+            return
+        }
+        let cycle = TimeInterval(phases.inhale + phases.hold + phases.exhale + phases.hold2)
+        guard cycle > 0 else { return }
 
-                // Draw arc
-                var path = Path()
-                path.addArc(center: center, radius: r,
-                           startAngle: .radians(cycle * .pi * 2),
-                           endAngle: .radians(cycle * .pi * 2 + .pi * 1.5),
-                           clockwise: false)
+        timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { _ in
+            let t = Date.now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
+            let inhEnd = TimeInterval(phases.inhale)
+            let holdEnd = inhEnd + TimeInterval(phases.hold)
+            let exhEnd = holdEnd + TimeInterval(phases.exhale)
 
-                context.opacity = 0.3
-                context.stroke(path, with: .color(.white), lineWidth: 1.5)
-
-                // "breathe" text
-                context.opacity = 0.25
-                context.draw(
-                    Text("breathe")
-                        .font(.custom("CrimsonPro-ExtraLight", size: 14))
-                        .foregroundColor(.white),
-                    at: CGPoint(x: center.x, y: center.y + radius + 20)
-                )
+            if t < inhEnd {
+                currentLabel = "inhale"
+            } else if t < holdEnd {
+                currentLabel = "hold"
+            } else if t < exhEnd {
+                currentLabel = "exhale"
+            } else {
+                currentLabel = "hold"
             }
         }
-        .allowsHitTesting(false)
     }
 }

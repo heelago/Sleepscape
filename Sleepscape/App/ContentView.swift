@@ -22,11 +22,15 @@ struct ContentView: View {
             }
             .ignoresSafeArea(edges: .horizontal)
 
-            // Breath guide — centered, appears after 5s idle
-            if appState.showBreathGuide {
-                BreathGuide()
-                    .transition(.opacity)
-                    .allowsHitTesting(false)
+            // Breath guide — always visible while enabled
+            if appState.breathPulseEnabled {
+                BreathGuide(
+                    phases: appState.breathPhases,
+                    showPhaseText: appState.breathPhaseText,
+                    opacity: appState.breathPulseOpacity
+                )
+                .transition(.opacity)
+                .allowsHitTesting(false)
             }
 
             // Bottom grip strip

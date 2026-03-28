@@ -680,35 +680,30 @@ struct MetalCanvasView: UIViewRepresentable {
                 encoder.setFragmentTexture(strokeTex, index: 0)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
 
-                // 2) Breath pulse — independent layer, canvas-based radius
-                if appState.breathPulseEnabled {
-                    let breathRadius = min(Float(drawableSize.width), Float(drawableSize.height)) / 2 * 0.70
-                    // On idle (3s+), dim mandala and make pulse more prominent
-                    let idleTime = CACurrentMediaTime() - drawEndTime
-                    let idleFade: Float = hasEverDrawn && !isDrawing && idleTime > 3.0
-                        ? Float(min(2.5, 1.0 + (idleTime - 3.0) * 0.3))
-                        : 1.0
-                    renderBreathPulse(encoder: encoder, canvasSize: drawableSize,
-                                     radiusPx: breathRadius, fadeIn: idleFade)
-                }
-
-                // 5) Additive bloom glow
+                // 2) Additive bloom glow
                 encoder.setRenderPipelineState(additiveCompositePipelineState)
                 encoder.setFragmentTexture(bloomBlurTex, index: 0)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
 
-                // 6) Ambient blooms (additive glow circles)
+                // 3) Ambient blooms (additive glow circles)
                 renderAmbientBlooms(encoder: encoder, canvasSize: drawableSize)
 
-                // 7) Sparkle particles (additive bright dots)
+                // 4) Sparkle particles (additive bright dots)
                 if appState.sparklesEnabled {
                     renderSparkles(encoder: encoder, canvasSize: drawableSize)
                 }
 
-                // 8) Alpha-blend ripples on top
+                // 5) Alpha-blend ripples on top
                 encoder.setRenderPipelineState(alphaCompositePipelineState)
                 encoder.setFragmentTexture(rippleTex, index: 0)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+
+                // 6) Breath pulse — rendered on top of all drawing content
+                if appState.breathPulseEnabled {
+                    let breathRadius = min(Float(drawableSize.width), Float(drawableSize.height)) / 2 * 0.70
+                    renderBreathPulse(encoder: encoder, canvasSize: drawableSize,
+                                     radiusPx: breathRadius, fadeIn: appState.breathPulseOpacity)
+                }
 
                 // 9) Brightness cap — clamp luminance post-bloom (uses [[color(0)]])
                 let cap = appState.brightnessCap

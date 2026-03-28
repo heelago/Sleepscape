@@ -105,6 +105,8 @@ class AppState {
 
     // Breath pulse + breathing pattern
     var breathPulseEnabled: Bool = true
+    var breathPulseOpacity: Float = 0.7
+    var breathPhaseText: Bool = true
     var breathingPreset: BreathingPreset = .resonance
     var customInhale: Float = 4
     var customHold: Float = 2
