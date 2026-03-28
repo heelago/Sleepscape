@@ -70,7 +70,7 @@ void main() {
     float isTiny = smoothstep(20.0, 8.0, ringPos);
     dotPattern = mix(dotPattern, 1.0, isTiny);
 
-    float a = ring * dotPattern * 0.18 * glow * uFadeIn;
+    float a = ring * dotPattern * 0.55 * glow * uFadeIn;
     if (a < 0.001) discard;
     fragColor = vec4(uColor.rgb, a);
 }
