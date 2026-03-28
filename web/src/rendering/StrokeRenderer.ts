@@ -232,7 +232,11 @@ export class StrokeRenderer {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.renderer.strokeFBO.framebuffer);
     gl.viewport(0, 0, this.renderer.pixelWidth, this.renderer.pixelHeight);
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendEquation(gl.FUNC_ADD);
+    gl.blendFuncSeparate(
+      gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,  // RGB
+      gl.ONE, gl.ONE_MINUS_SRC_ALPHA          // Alpha
+    );
 
     for (const pass of passes) {
       const effectiveAlpha = pass.scaleByGlow ? pass.alpha * glowIntensity : pass.alpha;
@@ -249,6 +253,8 @@ export class StrokeRenderer {
       }
     }
 
+    // Restore default blend equation
+    gl.blendEquation(gl.FUNC_ADD);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
 

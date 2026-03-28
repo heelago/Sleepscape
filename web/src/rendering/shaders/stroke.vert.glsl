@@ -64,7 +64,13 @@ void main() {
         normal = normalize(normal);
     }
 
-    vec2 pos = mix(a, b, isRight);
+    // Extend each segment endpoint by half-width along the direction
+    // to create overlap at junctions (round cap effect)
+    float capExt = (len > 0.5) ? 0.5 : 0.0;
+    vec2 capA = a - dir * w0 * capExt;
+    vec2 capB = b + dir * w1 * capExt;
+
+    vec2 pos = mix(capA, capB, isRight);
     float width = mix(w0, w1, isRight);
     float offset = (isBottom < 0.5) ? -1.0 : 1.0;
     pos += normal * offset * width * 0.5;

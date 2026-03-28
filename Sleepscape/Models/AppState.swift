@@ -72,7 +72,7 @@ class AppState {
     // Drawing
     var drawMode: DrawMode = .mandala
     var symmetry: Int = 8
-    var brushSize: Float = 0.3
+    var brushSize: Float = 4.0
     var currentPalette: Palette = Palette.all[0]
     var currentInkIndex: Int = 0
     var lineStyle: LineStyle = .neon
