@@ -645,32 +645,45 @@
     }
 
     /* ── Install prompt ── */
-    .install-btn {
+    .install-pill {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-      transform: translateX(-50%);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+      transform: translateX(-50%) translateY(8px);
       z-index: 20;
       display: none;
       align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 16px;
-      background: rgba(20,16,36,0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(196,184,232,0.25);
-      color: rgba(230,224,255,0.9);
+      gap: 2px;
+      padding: 0 0 0 12px;
+      border-radius: 14px;
+      background: rgba(12,11,20,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(196,184,232,0.14);
+      color: rgba(220,212,242,0.65);
       font-family: 'Crimson Pro', serif;
       font-weight: 200;
-      font-size: 12px;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: opacity 0.3s, transform 0.3s;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .install-btn.visible { display: inline-flex; }
-    .install-btn:hover { background: rgba(30,24,50,0.85); border-color: rgba(196,184,232,0.45); }
-    .install-btn svg { opacity: 0.7; }
+    .install-pill.visible { display: inline-flex; opacity: 1; transform: translateX(-50%) translateY(0); }
+    .install-pill-action {
+      background: none; border: none; padding: 7px 4px;
+      color: inherit; font: inherit; letter-spacing: inherit;
+      cursor: pointer; display: flex; align-items: center; gap: 5px;
+    }
+    .install-pill-action:hover { color: rgba(230,224,255,0.9); }
+    .install-pill-action svg { opacity: 0.55; }
+    .install-pill-close {
+      background: none; border: none; padding: 6px 9px 6px 6px;
+      color: rgba(220,212,242,0.35);
+      cursor: pointer; display: flex; align-items: center;
+      border-left: 1px solid rgba(196,184,232,0.1);
+      margin-left: 4px;
+    }
+    .install-pill-close:hover { color: rgba(220,212,242,0.7); }
 
     .install-modal-backdrop {
       position: fixed; inset: 0; z-index: 30;
@@ -743,10 +756,15 @@
 <body>
   <canvas id="canvas"></canvas>
 
-  <button id="install-btn" class="install-btn" aria-label="Install Sleepscape">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-    save to home screen
-  </button>
+  <div id="install-pill" class="install-pill" role="dialog" aria-label="Install Sleepscape">
+    <button class="install-pill-action" id="install-pill-action">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      add to home screen
+    </button>
+    <button class="install-pill-close" id="install-pill-close" aria-label="Dismiss">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
 
   <div id="install-modal" class="install-modal-backdrop">
     <div class="install-modal">
@@ -761,66 +779,81 @@
 
   <script>
     (function() {
-      const btn = document.getElementById('install-btn');
+      const pill = document.getElementById('install-pill');
+      const actionBtn = document.getElementById('install-pill-action');
+      const closeBtn = document.getElementById('install-pill-close');
       const modal = document.getElementById('install-modal');
-      const closeBtn = document.getElementById('install-modal-close');
+      const modalClose = document.getElementById('install-modal-close');
+
+      // Register service worker regardless
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      }
 
       // Hide if already running standalone (installed)
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                            window.navigator.standalone === true;
       if (isStandalone) return;
 
-      // Don't nag if user dismissed before
-      if (localStorage.getItem('sleepscape-install-dismissed') === '1') return;
+      // Respect dismissal for 30 days
+      const dismissedAt = parseInt(localStorage.getItem('sleepscape-install-dismissed') || '0', 10);
+      if (dismissedAt && Date.now() - dismissedAt < 30 * 24 * 60 * 60 * 1000) return;
 
       const ua = navigator.userAgent;
       const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isMobile = isIOS || /Android/.test(ua);
+
+      // Only prompt on mobile — desktop users don't typically want this
+      if (!isMobile) return;
 
       let deferredPrompt = null;
+      let canShow = false;
 
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        btn.classList.add('visible');
+        if (canShow) pill.classList.add('visible');
       });
 
-      if (isIOS) {
-        // iOS Safari has no beforeinstallprompt — show button that opens instructions
-        btn.classList.add('visible');
-      }
+      // Wait 25 seconds before showing — let the user experience the app first
+      setTimeout(() => {
+        canShow = true;
+        if (deferredPrompt || isIOS) pill.classList.add('visible');
+      }, 25000);
 
-      btn.addEventListener('click', async () => {
+      const dismiss = () => {
+        pill.classList.remove('visible');
+        localStorage.setItem('sleepscape-install-dismissed', String(Date.now()));
+      };
+
+      actionBtn.addEventListener('click', async () => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
           const choice = await deferredPrompt.userChoice;
           deferredPrompt = null;
-          btn.classList.remove('visible');
+          pill.classList.remove('visible');
           if (choice && choice.outcome === 'dismissed') {
-            localStorage.setItem('sleepscape-install-dismissed', '1');
+            localStorage.setItem('sleepscape-install-dismissed', String(Date.now()));
           }
         } else if (isIOS) {
           modal.classList.add('visible');
         }
       });
 
-      closeBtn.addEventListener('click', () => {
+      closeBtn.addEventListener('click', dismiss);
+
+      modalClose.addEventListener('click', () => {
         modal.classList.remove('visible');
-        btn.classList.remove('visible');
-        localStorage.setItem('sleepscape-install-dismissed', '1');
+        dismiss();
       });
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('visible');
       });
 
       window.addEventListener('appinstalled', () => {
-        btn.classList.remove('visible');
-        localStorage.setItem('sleepscape-install-dismissed', '1');
+        pill.classList.remove('visible');
+        localStorage.setItem('sleepscape-install-dismissed', String(Date.now()));
       });
-
-      // Register service worker
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-      }
     })();
   </script>
 
