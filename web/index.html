@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04030a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sleepscape">
 <title>Sleepscape — Draw yourself to sleep</title>
 <meta name="description" content="A meditative drawing app. Make mandalas while generative ambient music plays. Free, open source, no data collection.">
 <meta property="og:title" content="Sleepscape — Draw yourself to sleep">
@@ -25,9 +32,9 @@
     --gold: #d4a96a;
     --rose: #d9768a;
     --sage: #8fb8a8;
-    --text: rgba(218,210,242,0.92);
-    --text-dim: rgba(210,200,235,0.65);
-    --text-faint: rgba(196,184,232,0.42);
+    --text: rgba(222,215,245,0.95);
+    --text-dim: rgba(214,205,238,0.82);
+    --text-faint: rgba(200,190,232,0.62);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -518,11 +525,60 @@
   }
 
   @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
+    nav { padding: 16px 20px; }
     .nav-links { display: none; }
     .feature-inner, .feature-inner.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
     .promise-grid { grid-template-columns: 1fr; }
-    footer { flex-direction: column; align-items: flex-start; }
+    footer { flex-direction: column; align-items: flex-start; padding: 32px 24px; }
+
+    /* stronger hero overlay so text reads over the image on small screens */
+    #hero {
+      padding: 110px 20px 72px;
+      background-image: linear-gradient(rgba(4,3,10,0.92) 0%, rgba(4,3,10,0.86) 50%, rgba(4,3,10,0.95) 100%), url('img-hero-banner.png');
+    }
+    .hero-eyebrow { font-size: 0.78rem; letter-spacing: 0.3em; margin-bottom: 22px; }
+    .hero-sub {
+      font-size: 1.08rem;
+      line-height: 1.65;
+      color: rgba(230,224,250,0.96);
+      margin-bottom: 40px;
+      padding: 0 4px;
+    }
+    .cta-group { gap: 12px; flex-direction: column; width: 100%; max-width: 320px; }
+    .btn-primary, .btn-ghost { width: 100%; padding: 16px 24px; font-size: 0.92rem; letter-spacing: 0.14em; }
+
+    .feature { padding: 72px 20px; }
+    .feature-bg { padding: 80px 20px; }
+    .feature-label { font-size: 0.72rem; letter-spacing: 0.28em; opacity: 0.7; }
+    .feature-text {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: rgba(220,212,242,0.88);
+    }
+    .pill { font-size: 0.86rem; color: rgba(210,200,235,0.72); }
+    .pill.lit { color: rgba(222,215,248,0.92); }
+
+    /* darken the washed images behind text so words stand out */
+    .feature-bg::before { opacity: 0.06; }
+
+    #promise { padding: 72px 20px; }
+    .promise-grid { gap: 16px; margin-top: 40px; }
+    .promise-item { padding: 28px 22px; }
+    .promise-body { font-size: 0.98rem; line-height: 1.65; color: rgba(218,208,240,0.85); }
+    .promise-title { font-size: 1.25rem; }
+
+    #palettes { padding: 72px 20px; }
+    .palette-card { width: calc(50% - 6px); }
+
+    #cta-bottom { padding: 80px 20px; }
+
+    .footer-left { font-size: 0.88rem; line-height: 1.7; color: rgba(200,190,232,0.7); }
+    .footer-links a { font-size: 0.88rem; color: rgba(200,190,232,0.7); }
+  }
+
+  @media (max-width: 420px) {
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2rem; }
   }
 </style>
 </head>
@@ -733,6 +789,13 @@
     });
   }, { threshold: 0.15 });
   reveals.forEach(r => observer.observe(r));
+
+  // Register service worker for PWA/offline support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>

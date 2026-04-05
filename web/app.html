@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Sleepscape</title>
+  <meta name="theme-color" content="#04030a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sleepscape">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,500&family=Crimson+Pro:wght@200;300&display=swap" rel="stylesheet">
   <style>
@@ -637,6 +644,93 @@
       color: rgba(255,255,255,0.8);
     }
 
+    /* ── Install prompt ── */
+    .install-btn {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      transform: translateX(-50%);
+      z-index: 20;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      background: rgba(20,16,36,0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(196,184,232,0.25);
+      color: rgba(230,224,255,0.9);
+      font-family: 'Crimson Pro', serif;
+      font-weight: 200;
+      font-size: 12px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .install-btn.visible { display: inline-flex; }
+    .install-btn:hover { background: rgba(30,24,50,0.85); border-color: rgba(196,184,232,0.45); }
+    .install-btn svg { opacity: 0.7; }
+
+    .install-modal-backdrop {
+      position: fixed; inset: 0; z-index: 30;
+      background: rgba(4,3,10,0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .install-modal-backdrop.visible { display: flex; }
+    .install-modal {
+      max-width: 380px; width: 100%;
+      background: rgba(12,11,20,0.98);
+      border: 1px solid rgba(196,184,232,0.18);
+      border-radius: 14px;
+      padding: 24px 22px 20px;
+      color: rgba(230,224,255,0.9);
+      font-family: 'Crimson Pro', serif;
+    }
+    .install-modal h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: 22px; letter-spacing: 1px;
+      color: rgba(220,212,245,0.95);
+      margin-bottom: 14px;
+    }
+    .install-modal p {
+      font-size: 14px; font-weight: 200; line-height: 1.6;
+      color: rgba(218,208,240,0.82);
+      margin-bottom: 10px;
+    }
+    .install-modal .step {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      font-size: 14px; font-weight: 200;
+      color: rgba(218,208,240,0.88);
+    }
+    .install-modal .step-num {
+      flex-shrink: 0;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(196,184,232,0.15);
+      color: rgba(220,212,245,0.9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+    .install-modal-close {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid rgba(196,184,232,0.25);
+      border-radius: 8px;
+      color: rgba(220,212,245,0.85);
+      font-family: 'Crimson Pro', serif;
+      font-weight: 200; font-size: 13px; letter-spacing: 1px;
+      cursor: pointer;
+    }
+    .install-modal-close:hover { border-color: rgba(196,184,232,0.5); }
+
     /* ── Settings Hints ── */
     .settings-hint {
       font-weight: 200; font-size: 11px;
@@ -648,6 +742,88 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
+
+  <button id="install-btn" class="install-btn" aria-label="Install Sleepscape">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+    save to home screen
+  </button>
+
+  <div id="install-modal" class="install-modal-backdrop">
+    <div class="install-modal">
+      <h3>save to home screen</h3>
+      <p>Install Sleepscape on your iPhone to use it full-screen, no browser bars.</p>
+      <div class="step"><span class="step-num">1</span> Tap the Share icon at the bottom of Safari</div>
+      <div class="step"><span class="step-num">2</span> Scroll down and tap "Add to Home Screen"</div>
+      <div class="step"><span class="step-num">3</span> Tap "Add" in the top-right</div>
+      <button class="install-modal-close" id="install-modal-close">got it</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const btn = document.getElementById('install-btn');
+      const modal = document.getElementById('install-modal');
+      const closeBtn = document.getElementById('install-modal-close');
+
+      // Hide if already running standalone (installed)
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                           window.navigator.standalone === true;
+      if (isStandalone) return;
+
+      // Don't nag if user dismissed before
+      if (localStorage.getItem('sleepscape-install-dismissed') === '1') return;
+
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+      let deferredPrompt = null;
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        btn.classList.add('visible');
+      });
+
+      if (isIOS) {
+        // iOS Safari has no beforeinstallprompt — show button that opens instructions
+        btn.classList.add('visible');
+      }
+
+      btn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const choice = await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          btn.classList.remove('visible');
+          if (choice && choice.outcome === 'dismissed') {
+            localStorage.setItem('sleepscape-install-dismissed', '1');
+          }
+        } else if (isIOS) {
+          modal.classList.add('visible');
+        }
+      });
+
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('visible');
+        btn.classList.remove('visible');
+        localStorage.setItem('sleepscape-install-dismissed', '1');
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('visible');
+      });
+
+      window.addEventListener('appinstalled', () => {
+        btn.classList.remove('visible');
+        localStorage.setItem('sleepscape-install-dismissed', '1');
+      });
+
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      }
+    })();
+  </script>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
